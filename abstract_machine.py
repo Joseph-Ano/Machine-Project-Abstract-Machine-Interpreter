@@ -54,15 +54,15 @@ class abstract_machine:
     self.curInputIdx = future_machine.curInputIdx
     self.valid_instructions = future_machine.valid_instructions
 
-  def machine_step(self):
+  def step(self):
     if(self.action =="SCAN"):
       self.scan()
       # self.scan()
       # print(self)
 
-  def run_machine(self):
+  def run(self):
     while True:
-      self.machine_step()
+      self.step()
 
       if(self.curState == "accept"):
         print("Input is accepted")
@@ -70,6 +70,14 @@ class abstract_machine:
       elif(len(self.machine_stack) == 0 and len(self.valid_instructions) == 0):
         print("Input is rejected")
         break
+
+  def start(self):
+    startingIdx = self.curInputIdx
+
+    if(self.action == "SCAN RIGHT"):
+      startingIdx = self.curInputIdx + 1
+
+    self.valid_instructions = get_valid_instructions(self.instructions, self.instructions[0][0], self.input, startingIdx)
 
 # TO DO
 # THINK OF BETTER STACK

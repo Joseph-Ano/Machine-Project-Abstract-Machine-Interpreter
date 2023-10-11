@@ -22,14 +22,14 @@ def main():
                                instructions[0][1], 
                                input, 
                                idx)
-    machine.valid_instructions = get_valid_instructions(instructions, instructions[0][0], input, idx)
+    machine.start()
     # machine.machine_stack.append(machine)
-    # machine.machine_step()
+    # machine.step()
     # print_machine(machine)
     # print("\n")
-    # machine.machine_step()
+    # machine.tep()
     # print_machine(machine)
-    machine.run_machine()
+    machine.run()
 
 main()
 
