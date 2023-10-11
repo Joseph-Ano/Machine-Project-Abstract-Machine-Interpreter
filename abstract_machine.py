@@ -10,32 +10,42 @@ class abstract_machine:
     self.action = action
     self.input = input
     self.curInputIdx = curInputIdx
+    self.valid_instructions = []
     self.machine_stack = []
-    self.valid_instructions = get_valid_instructions(instructions, curState, input, curInputIdx)
 
   def scan(self):
-    if(self.curInputIdx < len(self.input)-1):
-      for valid_instruction in self.valid_instructions:
-        next_state = valid_instruction[4]
-        next_action = ""
+    for valid_instruction in self.valid_instructions:
+      next_state = valid_instruction[4]
+      next_action = ""
 
-        # to find the action of the next state
-        for instruction in self.instructions:
-          if next_state == instruction[0]:
-            next_action = instruction[1]
-            break
+      # find the action of the next state
+      for instruction in self.instructions:
+        if next_state == instruction[0]:
+          next_action = instruction[1]
+          break
 
-        self.machine_stack.append(abstract_machine(
-          self.states,
-          self.language,
-          self.instructions,
-          valid_instruction[2],
-          next_state,
-          next_action,
-          self.input,
-          self.curInputIdx + 1
-        ))
+      self.machine_stack.append(abstract_machine(
+        self.states,
+        self.language,
+        self.instructions,
+        valid_instruction[2],
+        next_state,
+        next_action,
+        self.input,
+        self.curInputIdx + 1,
+      ))
+
+      if(self.machine_stack[-1].curInputIdx < len(self.input)):
+        self.machine_stack[-1].valid_instructions = get_valid_instructions(self.instructions, 
+                                                                           next_state, 
+                                                                           self.input, 
+                                                                           self.curInputIdx+1)
+      else:
+        self.machine_stack[-1].valid_instructions = []
   
+    self.get_future_machine()
+
+  def get_future_machine(self):
     future_machine = self.machine_stack.pop()
 
     self.memory = future_machine.memory
@@ -44,11 +54,24 @@ class abstract_machine:
     self.curInputIdx = future_machine.curInputIdx
     self.valid_instructions = future_machine.valid_instructions
 
-  def run_machine(self):
+  def machine_step(self):
     if(self.action =="SCAN"):
       self.scan()
-    else:
-      self.machine_stack.pop()
       # self.scan()
       # print(self)
+
+  def run_machine(self):
+    while True:
+      self.machine_step()
+
+      if(self.curState == "accept"):
+        print("Input is accepted")
+        break
+      elif(len(self.machine_stack) == 0 and len(self.valid_instructions) == 0):
+        print("Input is rejected")
+        break
+
+# TO DO
+# THINK OF BETTER STACK
+# FIX INPUT START AND END
 
