@@ -32,7 +32,7 @@ def parse_logic_input(logic):
         symbolAndDest = components[2:]
 
         for entry in symbolAndDest:
-            sourceState = components[0][0]
+            sourceState = components[0][:-1]
             action = components[1] # may contain memory
             memory = ""
 
@@ -43,7 +43,7 @@ def parse_logic_input(logic):
                 action = action[:idx]
 
             symbol = entry[1: entry.find(",")] # gets the symbol
-            dest = entry[entry.find(",")+1: -1] # gets the destination state
+            dest = entry[entry.find(",")+1: -1] if entry[-1] == ')' else entry[entry.find(",")+1: -2]# gets the destination state
 
             states.add(sourceState)
 
@@ -59,12 +59,36 @@ def parse_logic_input(logic):
 
 def get_valid_instructions(instructions, curState, input, curInputIdx):
     valid_instructions = []
-
     for instruction in instructions:
         if curState == instruction[0] and input[curInputIdx] == instruction[3]:
             valid_instructions.append(instruction)
     
     return valid_instructions
+
+def print_machine(machine):
+    # print(f"States: {machine.states}") 
+    # print(f"Language: {machine.language}") 
+    print(f"Instructions: {machine.instructions}")
+    # print(f"Memory: {machine.memory}")
+    print(f"CurState: {machine.curState}")
+    print(f"Action: {machine.action}")
+    print(f"Input: {machine.input}")
+    print(f"CurInputIdx: {machine.curInputIdx}")
+    # print(f"Machine stack: {len(machine.machine_stack)}")
+    print(f"Valid instructions: {machine.valid_instructions}")
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 # def find_logic_section(inputs: list):
