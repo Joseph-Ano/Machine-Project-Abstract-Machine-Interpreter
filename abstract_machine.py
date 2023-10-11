@@ -23,6 +23,8 @@ class abstract_machine:
         if next_state == instruction[0]:
           next_action = instruction[1]
           break
+      
+      nextInputIdx = self.curInputIdx + 1
 
       self.machine_stack.append(abstract_machine(
         self.states,
@@ -32,16 +34,14 @@ class abstract_machine:
         next_state,
         next_action,
         self.input,
-        self.curInputIdx + 1,
+        nextInputIdx,
       ))
 
-      if(self.machine_stack[-1].curInputIdx < len(self.input)):
+      if(nextInputIdx < len(self.input)):
         self.machine_stack[-1].valid_instructions = get_valid_instructions(self.instructions, 
                                                                            next_state, 
                                                                            self.input, 
-                                                                           self.curInputIdx+1)
-      else:
-        self.machine_stack[-1].valid_instructions = []
+                                                                          nextInputIdx)
   
     self.get_future_machine()
 
