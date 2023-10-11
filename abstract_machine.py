@@ -1,11 +1,12 @@
-class One_Way_Accepter:
-  def __init__(self, states, language, transitions, input):
+class abstract_machine:
+  def __init__(self, states, language, instructions, memory, input, curState, curInputIdx):
     self.states = states
     self.language = language
-    self.transitions = transitions
+    self.transitions = instructions
+    self.memory = memory
     self.input = input
-    self.curInputPtr = 0
-    self.curState = states[0]
+    self.curState = curState
+    self.curInputIdx = curInputIdx
 
   def scan(self):
     pass

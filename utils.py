@@ -1,4 +1,4 @@
-def get_inputs():
+def get_machine_design():
     print("Enter input:")
     part = "empty"
     data = []
@@ -56,7 +56,15 @@ def parse_logic_input(logic):
             
     # print(memory_language)
     return states, language, memory_language, instructions  
+
+def get_valid_instructions(instructions, curState, input, curInputIdx):
+    valid_instructions = []
+
+    for instruction in instructions:
+        if curState == instruction[0] and input[curInputIdx] == instruction[3]:
+            valid_instructions.append(instruction)
     
+    return valid_instructions
 
 
 # def find_logic_section(inputs: list):
