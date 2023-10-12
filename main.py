@@ -11,7 +11,7 @@ def main():
     # valid_instructions = get_valid_instructions(instructions, 'E', '#1', 1)
     # print(valid_instructions)
 
-    input = "#10"
+    input = "0001a"
     idx = 0
     memory = "temp"
     machine = abstract_machine(states, 
@@ -22,20 +22,32 @@ def main():
                                instructions[0][1], 
                                input, 
                                idx)
+
     machine.start()
-    # machine.machine_stack.append(machine)
-    # machine.step()
-    # print_machine(machine)
-    # print("\n")
-    # machine.step()
-    # print_machine(machine)
-    # print("\n")
-    # machine.step()
     machine.run()
     # print_machine(machine)
     # print("\n")
+
     # machine.step()
     # print_machine(machine)
+    # print("\n")
+   
+    # machine.step()
+    # print_machine(machine)
+    # print("\n")
+   
+    # machine.step()
+    # print_machine(machine)
+    # print("\n")
+
+    # machine.step()
+    # print_machine(machine)
+    # print("\n")
+
+    # machine.step()
+    # print_machine(machine)
+    # print("\n")
+    
 
 main()
 

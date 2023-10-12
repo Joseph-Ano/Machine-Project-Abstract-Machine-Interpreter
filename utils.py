@@ -63,9 +63,11 @@ def parse_logic_input(logic):
 
 def get_valid_instructions(instructions, curState, input, curInputIdx):
     valid_instructions = []
-    for instruction in instructions:
-        if curState == instruction[0] and input[curInputIdx] == instruction[3]:
-            valid_instructions.append(instruction)
+
+    if(curInputIdx < len(input) and curInputIdx >= 0):
+        for instruction in instructions:
+            if curState == instruction[0] and input[curInputIdx] == instruction[3]:
+                valid_instructions.append(instruction)
     
     return valid_instructions
 
@@ -78,6 +80,7 @@ def print_machine(machine):
     print(f"Action: {machine.action}")
     print(f"Input: {machine.input}")
     print(f"CurInputIdx: {machine.curInputIdx}")
+    print(f"NextInputIdx: {machine.nextInputIdx}")
     print(f"Machine stack: {len(machine.machine_stack)}")
     print(f"Valid instructions: {machine.valid_instructions}")
 
