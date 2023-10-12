@@ -44,21 +44,34 @@ class abstract_machine:
                                                                           nextInputIdx)
   
     self.get_future_machine()
+  
+  def scan_right(self):
+    self.scan()
 
   def get_future_machine(self):
-    future_machine = self.machine_stack.pop()
+      future_machine = self.machine_stack.pop()
 
-    self.memory = future_machine.memory
-    self.curState = future_machine.curState
-    self.action = future_machine.action
-    self.curInputIdx = future_machine.curInputIdx
-    self.valid_instructions = future_machine.valid_instructions
+      self.memory = future_machine.memory
+      self.curState = future_machine.curState
+      self.action = future_machine.action
+      self.curInputIdx = future_machine.curInputIdx
+      self.valid_instructions = future_machine.valid_instructions
+  
+  def start(self):
+    startingIdx = self.curInputIdx
+
+    if(self.action == "SCAN RIGHT"):
+      startingIdx = self.curInputIdx + 1
+
+    self.valid_instructions = get_valid_instructions(self.instructions, self.instructions[0][0], self.input, startingIdx)
 
   def step(self):
     if(self.action =="SCAN"):
       self.scan()
-      # self.scan()
-      # print(self)
+    elif(self.action == "SCAN RIGHT"):
+      self.scan_right()
+    # else:
+    #   self.get_future_machine()
 
   def run(self):
     while True:
@@ -70,14 +83,6 @@ class abstract_machine:
       elif(len(self.machine_stack) == 0 and len(self.valid_instructions) == 0):
         print("Input is rejected")
         break
-
-  def start(self):
-    startingIdx = self.curInputIdx
-
-    if(self.action == "SCAN RIGHT"):
-      startingIdx = self.curInputIdx + 1
-
-    self.valid_instructions = get_valid_instructions(self.instructions, self.instructions[0][0], self.input, startingIdx)
 
 # TO DO
 # THINK OF BETTER STACK

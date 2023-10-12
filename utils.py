@@ -72,7 +72,7 @@ def get_valid_instructions(instructions, curState, input, curInputIdx):
 def print_machine(machine):
     # print(f"States: {machine.states}") 
     # print(f"Language: {machine.language}") 
-    print(f"Instructions: {machine.instructions}")
+    # print(f"Instructions: {machine.instructions}")
     # print(f"Memory: {machine.memory}")
     print(f"CurState: {machine.curState}")
     print(f"Action: {machine.action}")

@@ -6,6 +6,13 @@ q2] SCAN (0,q0), (1,q1), (1,accept)
 ==============================================
 
 .LOGIC
+q0] SCAN RIGHT (0,q0), (1,q1), (1,accept)
+q1] SCAN RIGHT (0,q0), (1,q2)
+q2] SCAN RIGHT (0,q0), (1,q1), (1,accept)
+
+==============================================
+
+.LOGIC
 A] SCAN RIGHT (0,A), (1,B), (#,accept)
 B] SCAN LEFT (0,C), (1,reject)
 C] SCAN RIGHT (1,A)
