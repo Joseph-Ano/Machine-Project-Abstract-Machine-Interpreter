@@ -80,7 +80,7 @@ def print_machine(machine):
     print(f"Action: {machine.action}")
     print(f"Input: {machine.input}")
     print(f"CurInputIdx: {machine.curInputIdx}")
-    print(f"NextInputIdx: {machine.nextInputIdx}")
+    # print(f"NextInputIdx: {machine.nextInputIdx}")
     print(f"Machine stack: {len(machine.machine_stack)}")
     print(f"Valid instructions: {machine.valid_instructions}")
 

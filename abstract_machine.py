@@ -10,12 +10,26 @@ class abstract_machine:
     self.action = action
     self.input = input
     self.curInputIdx = curInputIdx
-    self.nextInputIdx = curInputIdx
+    # self.nextInputIdx = curInputIdx
     self.previousAction = ""
     self.valid_instructions = []
     self.machine_stack = []
 
   def scan(self, direction=1):
+    offset = 0
+
+    if(self.action == "SCAN RIGHT"):
+      offset+=1
+    elif(self.action == "SCAN LEFT"):
+      offset-=1
+
+    self.valid_instructions = get_valid_instructions(self.instructions, 
+                                                     self.curState, 
+                                                     self.input, 
+                                                     self.curInputIdx + offset)
+    
+    # self.nextInputIdx = self.curInputIdx + offset
+    
     for valid_instruction in self.valid_instructions:
       next_state = valid_instruction[4]
       next_action = ""
@@ -39,20 +53,20 @@ class abstract_machine:
         nextInputIdx,
       ))
       
-      next_machine_action = self.machine_stack[-1].action
+      # next_machine_action = self.machine_stack[-1].action
       
-      if(next_machine_action == "SCAN RIGHT"):
-        nextInputIdx+=1
-      elif(next_machine_action == "SCAN LEFT"):
-        nextInputIdx-=1
+      # if(next_machine_action == "SCAN RIGHT"):
+      #   nextInputIdx+=1
+      # elif(next_machine_action == "SCAN LEFT"):
+      #   nextInputIdx-=1
 
-      self.machine_stack[-1].nextInputIdx = nextInputIdx
+      # self.machine_stack[-1].nextInputIdx = nextInputIdx
       self.machine_stack[-1].previousAction = self.action
 
-      self.machine_stack[-1].valid_instructions = get_valid_instructions(self.instructions, 
-                                                                        next_state, 
-                                                                        self.input, 
-                                                                        nextInputIdx)
+      # self.machine_stack[-1].valid_instructions = get_valid_instructions(self.instructions, 
+      #                                                                   next_state, 
+      #                                                                   self.input, 
+      #                                                                   nextInputIdx)
     if(len(self.machine_stack) > 0):
       self.get_next_machine()
 
@@ -64,15 +78,16 @@ class abstract_machine:
     self.scan(-1)
 
   def get_next_machine(self):
+      
       next_machine = self.machine_stack.pop()
 
       self.memory = next_machine.memory
       self.curState = next_machine.curState
       self.action = next_machine.action
       self.curInputIdx = next_machine.curInputIdx
-      self.nextInputIdx = next_machine.nextInputIdx
+      # self.nextInputIdx = next_machine.nextInputIdx
       self.previousAction = next_machine.previousAction
-      self.valid_instructions = next_machine.valid_instructions
+      # self.valid_instructions = next_machine.valid_instructions
   
   def start(self):
     startingIdx = self.curInputIdx
@@ -82,7 +97,7 @@ class abstract_machine:
     elif(self.action == "SCAN LEFT"):
       startingIdx-=1
 
-    self.valid_instructions = get_valid_instructions(self.instructions, self.instructions[0][0], self.input, startingIdx)
+    # self.valid_instructions = get_valid_instructions(self.instructions, self.instructions[0][0], self.input, startingIdx)
 
   def step(self):
     if(self.action =="SCAN"):
@@ -95,13 +110,13 @@ class abstract_machine:
       self.get_next_machine()
 
   def run(self):
-    # print_machine(self)
-    # print("\n")
+    print_machine(self)
+    print("\n")
     
     while True:
       self.step()
-      # print_machine(self)
-      # print("\n")
+      print_machine(self)
+      print("\n")
 
       if(self.curState == "accept" and self.curInputIdx == len(self.input)):
         print("Input is accepted")
