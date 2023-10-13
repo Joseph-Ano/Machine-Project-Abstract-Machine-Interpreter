@@ -1,5 +1,6 @@
 from utils import*
 from abstract_machine import*
+from memory import*
 
 
 def main():
@@ -8,12 +9,13 @@ def main():
     # print(logic)
 
     states, language, memory_language, instructions = parse_logic_input(logic)
+    memory = parse_data_input(data)
     # valid_instructions = get_valid_instructions(instructions, 'E', '#1', 1)
     # print(valid_instructions)
+    # print(memory.stackDict)
 
     input = "#01#"
     idx = 0
-    memory = "temp"
     machine = abstract_machine(states, 
                                language, 
                                instructions, 
@@ -25,6 +27,7 @@ def main():
 
     machine.start()
     machine.run()
+
     # print_machine(machine)
     # print("\n")
 

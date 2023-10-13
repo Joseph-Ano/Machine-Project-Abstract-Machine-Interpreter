@@ -21,6 +21,9 @@ C] SCAN RIGHT (1,A)
 
 .DATA
 STACK S1
+Queue s2
+Tape 3
+STACK 4
 .LOGIC
 A] WRITE(S1) (#,B)
 B] SCAN (0,C), (1,D)

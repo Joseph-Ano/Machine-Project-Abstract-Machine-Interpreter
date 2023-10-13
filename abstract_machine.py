@@ -126,7 +126,7 @@ class abstract_machine:
         print("Input is accepted")
         break
 
-      elif(self.curState == "accept" and (self.curInputIdx == 1 and self.previousAction == "SCAN LEFT")):
+      elif(self.curState == "accept" and (self.curInputIdx == 0 and self.previousAction == "SCAN LEFT")):
         print("Input is accepted")
         break
 

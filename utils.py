@@ -1,3 +1,5 @@
+from memory import*
+
 def get_machine_design():
     print("Enter input:")
     part = "empty"
@@ -60,6 +62,12 @@ def parse_logic_input(logic):
             instructions.append((sourceState, action, memory, symbol, dest))
 
     return states, language, memory_language, instructions  
+
+def parse_data_input(data):
+    memory = Memory()
+    memory.initialize(data)
+
+    return memory
 
 def get_valid_instructions(instructions, curState, input, curInputIdx):
     valid_instructions = []
