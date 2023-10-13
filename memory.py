@@ -9,30 +9,30 @@ class Memory:
         self.tape_2dDict = {}
 
     def write(self, name, input):
-        if(self.stackDict.has_key(name)):
+        if(name in self.stackDict):
             self.stackDict[name].write(input)
 
-        elif(self.queueDict.has_key(name)):
+        elif(name in self.queueDict):
             self.stackDict[name].write(input)
         
         else:
             pass
 
     def read(self, name):
-        if(self.stackDict.has_key(name)):
+        if(name in self.stackDict):
             return self.stackDict[name].read(input)
 
-        elif(self.queueDict.has_key(name)):
+        elif(name in self.queueDict):
             return self.stackDict[name].read(input)
         
         else:
             return 0
         
     def isEmpty(self, name):
-        if(self.stackDict.has_key(name)):
+        if(name in self.stackDict):
             return self.stackDict[name].check()
 
-        elif(self.queueDict.has_key(name)):
+        elif(name in self.queueDict):
             return self.stackDict[name].check()
         
         else:
@@ -48,6 +48,14 @@ class Memory:
                 self.stackDict.setdefault(name, Stack(name))
             elif(type == "Queue"):
                 self.queueDict.setdefault(name, CustomQueue(name))
+
+    def print_contents(self):
+        for stack in self.stackDict.values():
+            print(stack.stack)
+            
+        # print(self.stackDict.values())
+        # print(self.queueDict.values())
+        
 
     
         

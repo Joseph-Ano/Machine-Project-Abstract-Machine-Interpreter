@@ -13,8 +13,9 @@ def main():
     # valid_instructions = get_valid_instructions(instructions, 'E', '#1', 1)
     # print(valid_instructions)
     # print(memory.stackDict)
+    # print(instructions)
 
-    input = "#01#"
+    input = "00"
     idx = 0
     machine = abstract_machine(states, 
                                language, 

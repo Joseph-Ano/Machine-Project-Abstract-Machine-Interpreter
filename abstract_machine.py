@@ -1,7 +1,8 @@
-from utils import *
+from utils import*
+from memory import*
 
 class abstract_machine:
-  def __init__(self, states, language, instructions, memory, curState, action, input, curInputIdx):
+  def __init__(self, states, language, instructions, memory, curState, action, input, curInputIdx, offset=0):
     self.states = states
     self.language = language
     self.instructions = instructions
@@ -10,26 +11,16 @@ class abstract_machine:
     self.action = action
     self.input = input
     self.curInputIdx = curInputIdx
-    # self.nextInputIdx = curInputIdx
+
     self.previousAction = ""
-    self.valid_instructions = []
-    self.machine_stack = []
-
-  def scan(self, direction=1):
-    offset = 0
-
-    if(self.action == "SCAN RIGHT"):
-      offset+=1
-    elif(self.action == "SCAN LEFT"):
-      offset-=1
-
+    self.offset = 0
     self.valid_instructions = get_valid_instructions(self.instructions, 
                                                      self.curState, 
                                                      self.input, 
-                                                     self.curInputIdx + offset)
-    
-    # self.nextInputIdx = self.curInputIdx + offset
-    
+                                                     self.curInputIdx + self.offset)
+    self.machine_stack = []
+
+  def scan(self, direction=1):
     for valid_instruction in self.valid_instructions:
       next_state = valid_instruction[4]
       next_action = ""
@@ -41,53 +32,75 @@ class abstract_machine:
           break
       
       nextInputIdx = self.curInputIdx + direction
+      offset = 0
+
+      if(self.action == "SCAN RIGHT"):
+        offset+=1
+      elif(self.action == "SCAN LEFT"):
+        offset-=1
 
       self.machine_stack.append(abstract_machine(
         self.states,
         self.language,
         self.instructions,
-        valid_instruction[2],
+        self.memory,
         next_state,
         next_action,
         self.input,
         nextInputIdx,
+        offset
       ))
       
-      # next_machine_action = self.machine_stack[-1].action
-      
-      # if(next_machine_action == "SCAN RIGHT"):
-      #   nextInputIdx+=1
-      # elif(next_machine_action == "SCAN LEFT"):
-      #   nextInputIdx-=1
-
-      # self.machine_stack[-1].nextInputIdx = nextInputIdx
       self.machine_stack[-1].previousAction = self.action
 
-      # self.machine_stack[-1].valid_instructions = get_valid_instructions(self.instructions, 
-      #                                                                   next_state, 
-      #                                                                   self.input, 
-      #                                                                   nextInputIdx)
     if(len(self.machine_stack) > 0):
       self.get_next_machine()
-
   
   def scan_right(self):
-    self.scan()
+    self.scan(1)
 
   def scan_left(self):
     self.scan(-1)
 
+  def write(self):
+    for valid_instruction in self.valid_instructions:
+      next_state = valid_instruction[4]
+      next_action = ""
+
+      # find the action of the next state
+      for instruction in self.instructions:
+        if next_state == instruction[0]:
+          next_action = instruction[1]
+          break
+
+      self.machine_stack.append(abstract_machine(
+        self.states,
+        self.language,
+        self.instructions,
+        self.memory,
+        next_state,
+        next_action,
+        self.input,
+        self.curInputIdx,
+      ))
+
+      self.machine_stack[-1].previousAction = self.action
+      self.machine_stack[-1].memory.write(valid_instruction[2], valid_instruction[3])
+
+    if(len(self.machine_stack) > 0):
+      self.get_next_machine()
+
+
   def get_next_machine(self):
-      
       next_machine = self.machine_stack.pop()
 
       self.memory = next_machine.memory
       self.curState = next_machine.curState
       self.action = next_machine.action
       self.curInputIdx = next_machine.curInputIdx
-      # self.nextInputIdx = next_machine.nextInputIdx
       self.previousAction = next_machine.previousAction
-      # self.valid_instructions = next_machine.valid_instructions
+      self.offset = next_machine.offset
+      self.valid_instructions = next_machine.valid_instructions
   
   def start(self):
     startingIdx = self.curInputIdx
@@ -97,8 +110,6 @@ class abstract_machine:
     elif(self.action == "SCAN LEFT"):
       startingIdx-=1
 
-    # self.valid_instructions = get_valid_instructions(self.instructions, self.instructions[0][0], self.input, startingIdx)
-
   def step(self):
     if(self.action =="SCAN"):
       self.scan()
@@ -106,6 +117,8 @@ class abstract_machine:
       self.scan_right()
     elif(self.action == "SCAN LEFT"):
       self.scan_left()
+    elif(self.action == "WRITE"):
+      self.write()
     else:
       self.get_next_machine()
 

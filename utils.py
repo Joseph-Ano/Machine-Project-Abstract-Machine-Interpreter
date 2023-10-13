@@ -30,7 +30,7 @@ def parse_logic_input(logic):
     instructions = []
 
     for line in logic:
-        components = line.split(" ")
+        components = line.strip().split(" ")
         sourceState = components[0][:-1]
 
         if(components[2] == "RIGHT" or components[2] =="LEFT"):
@@ -51,8 +51,10 @@ def parse_logic_input(logic):
         states.add(sourceState)
 
         for entry in symbolAndDest:
+            # print(entry)
             symbol = entry[1: entry.find(",")] # gets the symbol
             dest = entry[entry.find(",")+1: -1] if entry[-1] == ')' else entry[entry.find(",")+1: -2]# gets the destination state
+            # print(dest)
 
             if(memory != ""): # if line uses memory, includ symbol as part of language for memory
                 memory_language.setdefault(memory, set()).add(symbol)
@@ -71,11 +73,23 @@ def parse_data_input(data):
 
 def get_valid_instructions(instructions, curState, input, curInputIdx):
     valid_instructions = []
+    action = ""
 
-    if(curInputIdx < len(input) and curInputIdx >= 0):
-        for instruction in instructions:
-            if curState == instruction[0] and input[curInputIdx] == instruction[3]:
+    for instruction in instructions:
+        if curState == instruction[0]:
+            action = instruction[1]
+            break
+
+    if(action == "WRITE"):
+         for instruction in instructions:
+            if curState == instruction[0]:
                 valid_instructions.append(instruction)
+        
+    else:
+        if(curInputIdx < len(input) and curInputIdx >= 0):
+            for instruction in instructions:
+                if curState == instruction[0] and input[curInputIdx] == instruction[3]:
+                    valid_instructions.append(instruction)
     
     return valid_instructions
 
@@ -83,8 +97,10 @@ def print_machine(machine):
     # print(f"States: {machine.states}") 
     # print(f"Language: {machine.language}") 
     # print(f"Instructions: {machine.instructions}")
-    # print(f"Memory: {machine.memory}")
     print(f"CurState: {machine.curState}")
+    print(f"Memory:")
+    machine.memory.print_contents()
+    print("=============================")
     print(f"Action: {machine.action}")
     print(f"Input: {machine.input}")
     print(f"CurInputIdx: {machine.curInputIdx}")

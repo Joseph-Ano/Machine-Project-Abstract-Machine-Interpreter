@@ -21,9 +21,6 @@ C] SCAN RIGHT (1,A)
 
 .DATA
 STACK S1
-Queue s2
-Tape 3
-STACK 4
 .LOGIC
 A] WRITE(S1) (#,B)
 B] SCAN (0,C), (1,D)
@@ -31,3 +28,19 @@ C] WRITE(S1) (#,B)
 D] READ(S1) (#,E)   
 E] SCAN (1,D), (#,F)  
 F] READ(S1) (#,accept)
+
+==============================================
+
+.LOGIC
+q0] SCAN RIGHT (0,q0), (1,q1)
+q1] SCAN (0,q0), (1,accept)
+q2] SCAN RIGHT (0,q0), (1,q1), (1,accept)
+
+==============================================
+
+.LOGIC
+q0] SCAN (0,q0), (0,q1)
+q1] SCAN RIGHT (0,q0), (1,accept)
+q2] SCAN RIGHT (0,q0), (1,q1), (1,accept)
+
+==============================================
