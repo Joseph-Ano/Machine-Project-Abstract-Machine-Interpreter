@@ -11,9 +11,8 @@ class abstract_machine:
     self.action = action
     self.input = input
     self.curInputIdx = curInputIdx
-
     self.previousAction = ""
-    self.offset = 0
+    self.offset = offset
     self.valid_instructions = get_valid_instructions(self.instructions, 
                                                      self.curState, 
                                                      self.input, 
@@ -34,9 +33,9 @@ class abstract_machine:
       nextInputIdx = self.curInputIdx + direction
       offset = 0
 
-      if(self.action == "SCAN RIGHT"):
+      if(next_action == "SCAN RIGHT"):
         offset+=1
-      elif(self.action == "SCAN LEFT"):
+      elif(next_action == "SCAN LEFT"):
         offset-=1
 
       self.machine_stack.append(abstract_machine(
@@ -90,6 +89,39 @@ class abstract_machine:
     if(len(self.machine_stack) > 0):
       self.get_next_machine()
 
+  def read(self):
+    for valid_instruction in self.valid_instructions:
+      memoryName = valid_instruction[2]
+      symbolToBeRead = valid_instruction[3]
+
+      if(not self.memory.isEmpty(memoryName) and symbolToBeRead == self.memory.peek(memoryName)):
+        next_state = valid_instruction[4]
+        next_action = ""
+
+        # find the action of the next state
+        for instruction in self.instructions:
+          if next_state == instruction[0]:
+            next_action = instruction[1]
+            break
+
+        self.machine_stack.append(abstract_machine(
+          self.states,
+          self.language,
+          self.instructions,
+          self.memory,
+          next_state,
+          next_action,
+          self.input,
+          self.curInputIdx,
+        ))
+
+        self.machine_stack[-1].previousAction = self.action
+        self.machine_stack[-1].memory.read(memoryName)
+
+    if(len(self.machine_stack) > 0):
+      self.get_next_machine()
+    else:
+      self.valid_instructions = []
 
   def get_next_machine(self):
       next_machine = self.machine_stack.pop()
@@ -119,6 +151,8 @@ class abstract_machine:
       self.scan_left()
     elif(self.action == "WRITE"):
       self.write()
+    elif(self.action == "READ"):
+      self.read()
     else:
       self.get_next_machine()
 
@@ -143,7 +177,7 @@ class abstract_machine:
         print("Input is accepted")
         break
 
-      elif(len(self.machine_stack) == 0 and len(self.valid_instructions) == 0):
+      elif(len(self.machine_stack) == 0 and len(self.valid_instructions) == 0 ):
         print("Input is rejected")
         break
 

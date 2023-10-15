@@ -16,3 +16,6 @@ class CustomQueue:
         else:
             return False
         
+    def peek(self):
+        return self.queue[0]
+        

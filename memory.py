@@ -20,20 +20,30 @@ class Memory:
 
     def read(self, name):
         if(name in self.stackDict):
-            return self.stackDict[name].read(input)
+            return self.stackDict[name].read()
 
         elif(name in self.queueDict):
-            return self.stackDict[name].read(input)
+            return self.stackDict[name].read()
         
         else:
             return 0
         
     def isEmpty(self, name):
         if(name in self.stackDict):
-            return self.stackDict[name].check()
+            return self.stackDict[name].isEmpty()
 
         elif(name in self.queueDict):
-            return self.stackDict[name].check()
+            return self.queueDict[name].isEmpty()
+        
+        else:
+            return 0
+        
+    def peek(self, name):
+        if(name in self.stackDict):
+            return self.stackDict[name].peek()
+
+        elif(name in self.queueDict):
+            return self.stackDict[name].peek()
         
         else:
             return 0

@@ -15,8 +15,15 @@ def main():
     # print(memory.stackDict)
     # print(instructions)
 
-    input = "00"
+    input = "#011#"
     idx = 0
+    offset = 0
+
+    if(instructions[0][1] == "SCAN RIGHT"):
+        offset+=1
+    elif(instructions[0][1] == "SCAN LEFT"):
+        offset-=1
+    
     machine = abstract_machine(states, 
                                language, 
                                instructions, 
@@ -24,7 +31,8 @@ def main():
                                instructions[0][0], 
                                instructions[0][1], 
                                input, 
-                               idx)
+                               idx, 
+                               offset)
 
     machine.start()
     machine.run()
@@ -40,6 +48,18 @@ def main():
     # print_machine(machine)
     # print("\n")
    
+    # machine.step()
+    # print_machine(machine)
+    # print("\n")
+
+    # machine.step()
+    # print_machine(machine)
+    # print("\n")
+
+    # machine.step()
+    # print_machine(machine)
+    # print("\n")
+
     # machine.step()
     # print_machine(machine)
     # print("\n")

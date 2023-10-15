@@ -80,7 +80,7 @@ def get_valid_instructions(instructions, curState, input, curInputIdx):
             action = instruction[1]
             break
 
-    if(action == "WRITE"):
+    if(action == "WRITE" or action == "READ"):
          for instruction in instructions:
             if curState == instruction[0]:
                 valid_instructions.append(instruction)
@@ -107,30 +107,3 @@ def print_machine(machine):
     # print(f"NextInputIdx: {machine.nextInputIdx}")
     print(f"Machine stack: {len(machine.machine_stack)}")
     print(f"Valid instructions: {machine.valid_instructions}")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# def find_logic_section(inputs: list):
-#     for i in range(len(inputs)):
-#         if(inputs[i].strip() == ".LOGIC"):
-#             return i
-#     return -1
-
-
-# def find_data_section(inputs: list):
-#     for i in range(len(inputs)):
-#         if(inputs[i].strip() == ".DATA"):
-#             return i
-#     return -1

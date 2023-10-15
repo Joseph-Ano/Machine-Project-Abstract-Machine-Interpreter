@@ -15,3 +15,6 @@ class Stack:
         else:
             return False
     
+    def peek(self):
+        return self.stack[-1]
+    
