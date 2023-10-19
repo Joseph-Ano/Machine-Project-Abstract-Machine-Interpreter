@@ -61,7 +61,7 @@ class Memory:
 
     def print_contents(self):
         for stack in self.stackDict.values():
-            print(stack.stack)
+            print(f"{stack.name}: {stack.stack}")
             
         # print(self.stackDict.values())
         # print(self.queueDict.values())

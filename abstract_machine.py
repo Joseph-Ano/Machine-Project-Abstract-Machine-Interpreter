@@ -135,12 +135,17 @@ class abstract_machine:
       self.valid_instructions = next_machine.valid_instructions
   
   def start(self):
-    startingIdx = self.curInputIdx
+    offset = 0
     
     if(self.action == "SCAN RIGHT"):
-      startingIdx+=1
+      offset+=1
     elif(self.action == "SCAN LEFT"):
-      startingIdx-=1
+      offset-=1
+
+    self.valid_instructions = get_valid_instructions(self.instructions, 
+                                                      self.curState, 
+                                                      self.input, 
+                                                      self.curInputIdx + offset)
 
   def step(self):
     if(self.action =="SCAN"):
