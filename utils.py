@@ -23,6 +23,26 @@ def get_machine_design():
 
     return data, logic
 
+def app_get_machine_design(text):
+
+    part = "empty"
+    data = []
+    logic = []
+
+    for line in text:
+        if line == '':
+            pass
+        elif line == ".DATA":
+            part = ".DATA"
+        elif line == ".LOGIC":
+            part = ".LOGIC"
+        elif part == ".DATA":
+            data.append(line)
+        elif part == ".LOGIC":
+            logic.append(line)
+
+    return data, logic
+
 def parse_logic_input(logic):
     states = set()
     language = set()
