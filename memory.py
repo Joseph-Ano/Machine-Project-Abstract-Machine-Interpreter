@@ -65,6 +65,22 @@ class Memory:
 
         for queue in self.queueDict.values():
             print(f"{queue.name}: {queue.queue}")
+
+    def print_stack_contents(self):
+        result = ""
+        for stack in self.stackDict.values():
+            result += f"{stack.name}: {stack.stack}\n"
+        
+        return result
+    
+    def print_queue_contents(self):
+        result = ""
+        for queue in self.queueDict.values():
+            result += f"{queue.name}: {queue.queue}\n"
+        
+        return result
+
+        
             
         # print(self.stackDict.values())
         # print(self.queueDict.values())

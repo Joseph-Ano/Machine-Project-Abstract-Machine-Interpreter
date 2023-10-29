@@ -54,7 +54,7 @@ def parse_logic_input(logic):
         sourceState = components[0][:-1]
 
         if(components[2] == "RIGHT" or components[2] =="LEFT"):
-            action = " ".join(components[1:3]) # may contain memory
+            action = " ".join(components[1:3])
             symbolAndDest = components[3:]
         else:
             action = components[1] # may contain memory
@@ -76,7 +76,7 @@ def parse_logic_input(logic):
             dest = entry[entry.find(",")+1: -1] if entry[-1] == ')' else entry[entry.find(",")+1: -2]# gets the destination state
             # print(dest)
 
-            if(memory != ""): # if line uses memory, includ symbol as part of language for memory
+            if(memory != ""): # if line uses memory, include symbol as part of language for memory
                 memory_language.setdefault(memory, set()).add(symbol)
             else: # include symbol as part of language
                 language.add(symbol)
@@ -112,6 +112,19 @@ def get_valid_instructions(instructions, curState, input, curInputIdx):
                     valid_instructions.append(instruction)
     
     return valid_instructions
+
+def get_current_input_state(curIndex, user_input):
+    result = ""
+    if(curIndex < 0):
+        result += ">" + user_input
+    elif(curIndex >= len(user_input)):
+        result+= user_input + ">"
+    else:
+        for i in range(len(user_input)):
+            if(i == curIndex):
+                result += ">"
+            result += user_input[i]
+    return result
 
 def print_machine(machine):
     # print(f"States: {machine.states}") 
