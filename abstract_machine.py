@@ -162,28 +162,28 @@ class abstract_machine:
       self.get_next_machine()
 
   def run(self):
-    print_machine(self)
-    print("\n")
+    # print_machine(self)
+    # print("\n")
     
     while True:
       self.step()
-      print_machine(self)
-      print("\n")
+      # print_machine(self)
+      # print("\n")
 
       if(self.curState == "accept" and self.curInputIdx == len(self.input)):
-        print("Input is accepted")
+        # print("Input is accepted")
         break
 
       elif(self.curState == "accept" and (self.curInputIdx == len(self.input)-1 and self.previousAction == "SCAN RIGHT")):
-        print("Input is accepted")
+        # print("Input is accepted")
         break
 
       elif(self.curState == "accept" and (self.curInputIdx == 0 and self.previousAction == "SCAN LEFT")):
-        print("Input is accepted")
+        # print("Input is accepted")
         break
 
       elif(len(self.machine_stack) == 0 and len(self.valid_instructions) == 0 ):
-        print("Input is rejected")
+        # print("Input is rejected")
         break
 
 # TO DO
