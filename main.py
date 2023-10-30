@@ -13,22 +13,22 @@ def main():
     # valid_instructions = get_valid_instructions(instructions, 'E', '#1', 1)
     # print(valid_instructions)
     # print(memory.stackDict)
-    # print(instructions)
+    print(instructions)
 
-    input = "001#"
-    idx = 0
+    # input = "001#"
+    # idx = 0
     
-    machine = abstract_machine(states, 
-                               language, 
-                               instructions, 
-                               memory, 
-                               instructions[0][0], 
-                               instructions[0][1], 
-                               input, 
-                               idx)
+    # machine = abstract_machine(states, 
+    #                            language, 
+    #                            instructions, 
+    #                            memory, 
+    #                            instructions[0][0], 
+    #                            instructions[0][1], 
+    #                            input, 
+    #                            idx)
 
-    machine.start()
-    machine.run()
+    # machine.start()
+    # machine.run()
 
     # print_machine(machine)
     # print("\n")

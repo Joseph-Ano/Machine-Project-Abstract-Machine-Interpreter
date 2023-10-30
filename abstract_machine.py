@@ -31,8 +31,8 @@ class abstract_machine:
           break
       
       nextInputIdx = self.curInputIdx + direction
+      
       offset = 0
-
       if(next_action == "SCAN RIGHT"):
         offset+=1
       elif(next_action == "SCAN LEFT"):
@@ -72,6 +72,12 @@ class abstract_machine:
           next_action = instruction[1]
           break
 
+      offset = 0
+      if(next_action == "SCAN RIGHT"):
+        offset+=1
+      elif(next_action == "SCAN LEFT"):
+        offset-=1
+
       self.machine_stack.append(abstract_machine(
         self.states,
         self.language,
@@ -81,6 +87,7 @@ class abstract_machine:
         next_action,
         self.input,
         self.curInputIdx,
+        offset
       ))
 
       self.machine_stack[-1].previousAction = self.action
@@ -104,6 +111,12 @@ class abstract_machine:
             next_action = instruction[1]
             break
 
+        offset = 0
+        if(next_action == "SCAN RIGHT"):
+          offset+=1
+        elif(next_action == "SCAN LEFT"):
+          offset-=1
+
         self.machine_stack.append(abstract_machine(
           self.states,
           self.language,
@@ -113,6 +126,7 @@ class abstract_machine:
           next_action,
           self.input,
           self.curInputIdx,
+          offset
         ))
 
         self.machine_stack[-1].previousAction = self.action

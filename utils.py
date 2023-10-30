@@ -9,7 +9,6 @@ def get_machine_design():
     while True:
         user_input = input()
 
-        # 👇️ if user pressed Enter without a value, break out of loop
         if user_input == '':
             break
         elif user_input == ".DATA":
