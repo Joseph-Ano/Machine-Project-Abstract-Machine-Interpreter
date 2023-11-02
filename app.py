@@ -36,8 +36,8 @@ def main():
         else:
             # print(f"User input: {user_input}\nData Section:\n{data}\nLogic Section:\n{logic}")
             states, language, memory_language, instructions = parse_logic_input(logic)
-            memory = parse_data_input(data)
             user_input = user_input.splitlines()
+            memory = parse_data_input(data)
             machines = []
 
             for input in user_input:

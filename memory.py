@@ -1,5 +1,6 @@
 from memory_structs.stack import* 
 from memory_structs.customqueue import* 
+from memory_structs.tape_oned import* 
 
 class Memory:
     def __init__(self):
@@ -13,20 +14,39 @@ class Memory:
             self.stackDict[name].write(input)
 
         elif(name in self.queueDict):
-            self.stackDict[name].write(input)
+            self.queueDict[name].write(input)
+        
+        elif(name in self.tapeDict):
+            self.tapeDict[name].write(input)
         
         else:
             pass
 
-    def read(self, name):
+    def read(self, name, offset=0):
         if(name in self.stackDict):
             return self.stackDict[name].read()
 
         elif(name in self.queueDict):
-            return self.stackDict[name].read()
+            return self.queueDict[name].read()
+        
+        elif(name in self.tapeDict):
+            return self.tapeDict[name].read(offset)
         
         else:
-            return 0
+            return "NA"
+        
+    def peek(self, name, offset=0):
+        if(name in self.stackDict):
+            return self.stackDict[name].peek()
+
+        elif(name in self.queueDict):
+            return self.queueDict[name].peek()
+        
+        elif(name in self.tapeDict):
+            return self.tapeDict[name].peek(offset)
+        
+        else:
+            return "NA"
         
     def isEmpty(self, name):
         if(name in self.stackDict):
@@ -35,18 +55,11 @@ class Memory:
         elif(name in self.queueDict):
             return self.queueDict[name].isEmpty()
         
-        else:
-            return 0
-        
-    def peek(self, name):
-        if(name in self.stackDict):
-            return self.stackDict[name].peek()
-
-        elif(name in self.queueDict):
-            return self.stackDict[name].peek()
+        elif(name in self.tapeDict):
+            return self.tapeDict[name].isEmpty()
         
         else:
-            return 0
+            return True
         
     def initialize(self, data):
         for line in data:
@@ -56,8 +69,10 @@ class Memory:
 
             if(type == "STACK"):
                 self.stackDict.setdefault(name, Stack(name))
-            elif(type == "Queue"):
+            elif(type == "QUEUE"):
                 self.queueDict.setdefault(name, CustomQueue(name))
+            elif(type == "TAPE"):
+                self.tapeDict.setdefault(name, Tape_One_D(name))
 
     def print_contents(self):
         for stack in self.stackDict.values():
@@ -65,6 +80,9 @@ class Memory:
 
         for queue in self.queueDict.values():
             print(f"{queue.name}: {queue.queue}")
+
+        for tape in self.tapeDict.values():
+            print(f"{tape.name}: {tape.tape} - Current index: {tape.curPtr}")
 
     def print_stack_contents(self):
         result = ""
@@ -79,11 +97,21 @@ class Memory:
             result += f"{queue.name}: {queue.queue}\n"
         
         return result
+    
+    def print_tape_contents(self):
+        result = ""
+        for tape in self.tapeDict.values():
+            result += "[ "
+            for i in range(len(tape.tape)):
+                if(i == tape.curPtr):
+                    result += ">"
+                result += f"{tape.tape[i]} "
+            result += "]\n"
 
-        
-            
+        return result
+
         # print(self.stackDict.values())
-        # print(self.queueDict.values())
+       
         
 
     

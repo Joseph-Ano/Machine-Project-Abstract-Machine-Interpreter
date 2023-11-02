@@ -8,15 +8,15 @@ def main():
     # print(data)
     # print(logic)
 
+    # input = "001#"
+    # idx = 0
+
     states, language, memory_language, instructions = parse_logic_input(logic)
     memory = parse_data_input(data)
     # valid_instructions = get_valid_instructions(instructions, 'E', '#1', 1)
     # print(valid_instructions)
     # print(memory.stackDict)
     print(instructions)
-
-    # input = "001#"
-    # idx = 0
     
     # machine = abstract_machine(states, 
     #                            language, 
