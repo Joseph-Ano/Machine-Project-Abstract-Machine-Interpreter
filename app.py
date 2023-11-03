@@ -105,11 +105,13 @@ def main():
                 st.text(ACCEPT_RESPONSE)
 
             elif(cur_machine.curState == "accept" and (cur_machine.curInputIdx == len(cur_machine.input)-1 and (cur_machine.previousAction == "SCAN RIGHT" 
-                                                                                                                    or cur_machine.previousAction == "RIGHT"))):
+                                                                                                                or cur_machine.previousAction == "RIGHT"))):
+                    st.session_state["machine"] = None
                     st.text(ACCEPT_RESPONSE)
 
             elif(cur_machine.curState == "accept" and (cur_machine.curInputIdx == 0 and (cur_machine.previousAction == "SCAN LEFT"
-                                                           or cur_machine.previousAction == "LEFT"))):
+                                                                                         or cur_machine.previousAction == "LEFT"))):
+                    st.session_state["machine"] = None
                     st.text(ACCEPT_RESPONSE)
 
             elif(len(cur_machine.machine_stack) == 0 and len(cur_machine.valid_instructions) == 0 ):
@@ -136,7 +138,7 @@ def main():
                     st.text(f"{cur_machine.input}: {ACCEPT_RESPONSE}")
 
                 elif(cur_machine.curState == "accept" and (cur_machine.curInputIdx == 0 and (cur_machine.previousAction == "SCAN LEFT"
-                                                           or cur_machine.previousAction == "LEFT"))):
+                                                                                             or cur_machine.previousAction == "LEFT"))):
                     st.text(f"{cur_machine.input}: {ACCEPT_RESPONSE}")
 
                 elif(len(cur_machine.machine_stack) == 0 and len(cur_machine.valid_instructions) == 0 ):
