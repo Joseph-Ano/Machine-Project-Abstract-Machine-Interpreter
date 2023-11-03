@@ -6,12 +6,13 @@ ACCEPT_RESPONSE = "Input is accepted"
 REJECT_RESPONSE = "Input is rejected"
 
 def get_machine_info(machine):
-    machine_stack_contents = f"Stack:\n{machine.memory.print_stack_contents()}"
-    machine_queue_contents = f"Queue:\n{machine.memory.print_queue_contents()}"
+    stack_contents = f"Stack:\n{machine.memory.print_stack_contents()}"
+    queue_contents = f"Queue:\n{machine.memory.print_queue_contents()}"
+    tape1_contents = f"Tape 1d:\n{machine.memory.print_tape_contents()}"
     current_input_state = f"Input State: {get_current_input_state(machine.curInputIdx, machine.input)}"
     current_machine_state = f"Current State: {machine.curState}"
 
-    return machine_stack_contents, machine_queue_contents, current_input_state, current_machine_state
+    return stack_contents, queue_contents, tape1_contents, current_input_state, current_machine_state
 
 
 def main():
@@ -37,10 +38,10 @@ def main():
             # print(f"User input: {user_input}\nData Section:\n{data}\nLogic Section:\n{logic}")
             states, language, memory_language, instructions = parse_logic_input(logic)
             user_input = user_input.splitlines()
-            memory = parse_data_input(data)
             machines = []
 
             for input in user_input:
+                memory = parse_data_input(data, input)
                 machine = abstract_machine(states, 
                                language, 
                                instructions, 
@@ -54,11 +55,12 @@ def main():
             if(input_type == "Single"):
                 cur_machine = machines[0]
                 cur_machine.start()
-                machine_stack_contents, machine_queue_contents, current_input_state, current_machine_state = get_machine_info(cur_machine)
+                stack_contents, queue_contents, tape1_contents, current_input_state, current_machine_state = get_machine_info(cur_machine)
             
                 # Shows state/content of each memory
-                st.text(machine_stack_contents)
-                st.text(machine_queue_contents)
+                st.text(stack_contents)
+                st.text(queue_contents)
+                st.text(tape1_contents)
 
                 # Shows current state of input
                 st.text(current_input_state)
@@ -82,11 +84,12 @@ def main():
             cur_machine.step()
             st.session_state["machine"] = cur_machine
         
-            machine_stack_contents, machine_queue_contents, current_input_state, current_machine_state = get_machine_info(cur_machine)
+            stack_contents, queue_contents, tape1_contents, current_input_state, current_machine_state = get_machine_info(cur_machine)
             
             # Shows state/content of each memory
-            st.text(machine_stack_contents)
-            st.text(machine_queue_contents)
+            st.text(stack_contents)
+            st.text(queue_contents)
+            st.text(tape1_contents)
 
             # Shows current state of input
             st.text(current_input_state)

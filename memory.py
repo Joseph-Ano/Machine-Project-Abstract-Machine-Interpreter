@@ -1,13 +1,14 @@
 from memory_structs.stack import* 
 from memory_structs.customqueue import* 
 from memory_structs.tape_oned import* 
+from collections import OrderedDict
 
 class Memory:
     def __init__(self):
         self.stackDict = {}
         self.queueDict = {}
-        self.tapeDict = {}
-        self.tape_2dDict = {}
+        self.tapeDict = OrderedDict()
+        self.tape_2dDict = OrderedDict()
 
     def write(self, name, input):
         if(name in self.stackDict):

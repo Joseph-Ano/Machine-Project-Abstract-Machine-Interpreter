@@ -84,9 +84,12 @@ def parse_logic_input(logic):
 
     return states, language, memory_language, instructions  
 
-def parse_data_input(data):
+def parse_data_input(data, input):
     memory = Memory()
     memory.initialize(data)
+    for key, _ in memory.tapeDict.items():
+        memory.tapeDict[key].tape = [char for char in input]
+        break
 
     return memory
 
