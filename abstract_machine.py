@@ -1,5 +1,6 @@
 from utils import*
 from memory import*
+import copy
 
 class abstract_machine:
   def __init__(self, states, language, instructions, memory, curState, action, input, curInputIdx, offset=0):
@@ -82,7 +83,7 @@ class abstract_machine:
         self.states,
         self.language,
         self.instructions,
-        self.memory,
+        copy.deepcopy(self.memory),
         next_state,
         next_action,
         self.input,
@@ -121,7 +122,7 @@ class abstract_machine:
           self.states,
           self.language,
           self.instructions,
-          self.memory,
+          copy.deepcopy(self.memory),
           next_state,
           next_action,
           self.input,
@@ -137,12 +138,77 @@ class abstract_machine:
     else:
       self.valid_instructions = []
 
+  def right(self, tapeOffset=1):
+    isInputTape = False
+
+    for valid_instruction in self.valid_instructions:
+      tempMemory = copy.deepcopy(self.memory)
+      memoryName = valid_instruction[2]
+      symbolToBeRead = valid_instruction[3][0]
+      symbolToReplace = valid_instruction[3][2]
+
+      for key, _ in tempMemory.tapeDict.items():
+        if memoryName == key:
+          isInputTape = True
+          tempMemory.tapeDict[key].curPtr = self.curInputIdx
+        break
+
+      if(not tempMemory.isEmpty(memoryName) and symbolToBeRead == tempMemory.peek(memoryName, tapeOffset)):
+        next_state = valid_instruction[4]
+        next_action = ""
+
+        # find the action of the next state
+        for instruction in self.instructions:
+          if next_state == instruction[0]:
+            next_action = instruction[1]
+            break
+
+        offset = 0
+        if(next_action == "SCAN RIGHT"):
+          offset+=1
+        elif(next_action == "SCAN LEFT"):
+          offset-=1
+
+        if(tempMemory.tapeDict[memoryName].curPtr + tapeOffset <= len(self.input)-1 and 
+           tempMemory.tapeDict[memoryName].curPtr + tapeOffset >= 0):  
+            tempInput = self.input
+            tempInputIdx = self.curInputIdx
+
+            if(isInputTape):
+              tempInputIdx = tempInputIdx + tapeOffset
+              tempInput = self.input[:tempInputIdx] + symbolToReplace + self.input[tempInputIdx + 1:]
+
+            self.machine_stack.append(abstract_machine(
+              self.states,
+              self.language,
+              self.instructions,
+              tempMemory,
+              next_state,
+              next_action,
+              tempInput,
+              tempInputIdx,
+              offset
+            ))
+
+            self.machine_stack[-1].previousAction = self.action
+            self.machine_stack[-1].memory.read(memoryName, tapeOffset)
+            self.machine_stack[-1].memory.write(memoryName, symbolToReplace)
+
+    if(len(self.machine_stack) > 0):
+      self.get_next_machine()
+    else:
+      self.valid_instructions = []
+
+  def left(self):
+    self.right(-1)
+
   def get_next_machine(self):
       next_machine = self.machine_stack.pop()
 
       self.memory = next_machine.memory
       self.curState = next_machine.curState
       self.action = next_machine.action
+      self.input = next_machine.input
       self.curInputIdx = next_machine.curInputIdx
       self.previousAction = next_machine.previousAction
       self.offset = next_machine.offset
@@ -172,6 +238,10 @@ class abstract_machine:
       self.write()
     elif(self.action == "READ"):
       self.read()
+    elif(self.action == "RIGHT"):
+      self.right()
+    elif(self.action == "LEFT"):
+      self.left()
     else:
       self.get_next_machine()
 

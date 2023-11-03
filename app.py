@@ -37,6 +37,7 @@ def main():
         else:
             # print(f"User input: {user_input}\nData Section:\n{data}\nLogic Section:\n{logic}")
             states, language, memory_language, instructions = parse_logic_input(logic)
+            # print(instructions)
             user_input = user_input.splitlines()
             machines = []
 
@@ -83,6 +84,8 @@ def main():
             cur_machine = st.session_state["machine"]
             cur_machine.step()
             st.session_state["machine"] = cur_machine
+            print_machine(cur_machine)
+            # print("\n")
         
             stack_contents, queue_contents, tape1_contents, current_input_state, current_machine_state = get_machine_info(cur_machine)
             
@@ -101,13 +104,13 @@ def main():
                 st.session_state["machine"] = None
                 st.text(ACCEPT_RESPONSE)
 
-            elif(cur_machine.curState == "accept" and (cur_machine.curInputIdx == len(cur_machine.input)-1 and cur_machine.previousAction == "SCAN RIGHT")):
-                st.session_state["machine"] = None
-                st.text(ACCEPT_RESPONSE)
+            elif(cur_machine.curState == "accept" and (cur_machine.curInputIdx == len(cur_machine.input)-1 and (cur_machine.previousAction == "SCAN RIGHT" 
+                                                                                                                    or cur_machine.previousAction == "RIGHT"))):
+                    st.text(ACCEPT_RESPONSE)
 
-            elif(cur_machine.curState == "accept" and (cur_machine.curInputIdx == 0 and cur_machine.previousAction == "SCAN LEFT")):
-                st.session_state["machine"] = None
-                st.text(ACCEPT_RESPONSE)
+            elif(cur_machine.curState == "accept" and (cur_machine.curInputIdx == 0 and (cur_machine.previousAction == "SCAN LEFT"
+                                                           or cur_machine.previousAction == "LEFT"))):
+                    st.text(ACCEPT_RESPONSE)
 
             elif(len(cur_machine.machine_stack) == 0 and len(cur_machine.valid_instructions) == 0 ):
                 st.session_state["machine"] = None
@@ -128,10 +131,12 @@ def main():
                 if(cur_machine.curState == "accept" and cur_machine.curInputIdx == len(cur_machine.input)):
                     st.text(f"{cur_machine.input}: {ACCEPT_RESPONSE}")
 
-                elif(cur_machine.curState == "accept" and (cur_machine.curInputIdx == len(cur_machine.input)-1 and cur_machine.previousAction == "SCAN RIGHT")):
+                elif(cur_machine.curState == "accept" and (cur_machine.curInputIdx == len(cur_machine.input)-1 and (cur_machine.previousAction == "SCAN RIGHT" 
+                                                                                                                    or cur_machine.previousAction == "RIGHT"))):
                     st.text(f"{cur_machine.input}: {ACCEPT_RESPONSE}")
 
-                elif(cur_machine.curState == "accept" and (cur_machine.curInputIdx == 0 and cur_machine.previousAction == "SCAN LEFT")):
+                elif(cur_machine.curState == "accept" and (cur_machine.curInputIdx == 0 and (cur_machine.previousAction == "SCAN LEFT"
+                                                           or cur_machine.previousAction == "LEFT"))):
                     st.text(f"{cur_machine.input}: {ACCEPT_RESPONSE}")
 
                 elif(len(cur_machine.machine_stack) == 0 and len(cur_machine.valid_instructions) == 0 ):

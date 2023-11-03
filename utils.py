@@ -102,7 +102,7 @@ def get_valid_instructions(instructions, curState, input, curInputIdx):
             action = instruction[1]
             break
 
-    if(action == "WRITE" or action == "READ"):
+    if(action == "WRITE" or action == "READ" or action == "RIGHT" or action == "LEFT"):
          for instruction in instructions:
             if curState == instruction[0]:
                 valid_instructions.append(instruction)
@@ -139,6 +139,6 @@ def print_machine(machine):
     print(f"Action: {machine.action}")
     print(f"Input: {machine.input}")
     print(f"CurInputIdx: {machine.curInputIdx}")
-    # print(f"NextInputIdx: {machine.nextInputIdx}")
+    print(f"PrevAction: {machine.previousAction}")
     print(f"Machine stack: {len(machine.machine_stack)}")
     print(f"Valid instructions: {machine.valid_instructions}")
