@@ -254,19 +254,11 @@ class abstract_machine:
       # print_machine(self)
       # print("\n")
 
-      if(self.curState == "accept" and self.curInputIdx == len(self.input)):
+      if(self.curState == "accept"):
         # print("Input is accepted")
         break
 
-      elif(self.curState == "accept" and (self.curInputIdx == len(self.input)-1 and self.previousAction == "SCAN RIGHT")):
-        # print("Input is accepted")
-        break
-
-      elif(self.curState == "accept" and (self.curInputIdx == 0 and self.previousAction == "SCAN LEFT")):
-        # print("Input is accepted")
-        break
-
-      elif(len(self.machine_stack) == 0 and len(self.valid_instructions) == 0 ):
+      elif((len(self.machine_stack) == 0 and len(self.valid_instructions) == 0) or self.curState =="reject"):
         # print("Input is rejected")
         break
 
