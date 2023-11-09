@@ -3,7 +3,7 @@ from memory import*
 import copy
 
 class abstract_machine:
-  def __init__(self, states, language, instructions, memory, curState, action, input, curInputIdx, offset=0):
+  def __init__(self, states, language, instructions, memory, curState, action, input, curInputIdx, offset=0, output=""):
     self.states = states
     self.language = language
     self.instructions = instructions
@@ -14,6 +14,8 @@ class abstract_machine:
     self.curInputIdx = curInputIdx
     self.previousAction = ""
     self.offset = offset
+    self.output = output
+    self.machineType = getMachineType(instructions)
     self.valid_instructions = get_valid_instructions(self.instructions, 
                                                      self.curState, 
                                                      self.input, 
@@ -48,7 +50,8 @@ class abstract_machine:
         next_action,
         self.input,
         nextInputIdx,
-        offset
+        offset,
+        self.output
       ))
       
       self.machine_stack[-1].previousAction = self.action
@@ -88,7 +91,8 @@ class abstract_machine:
         next_action,
         self.input,
         self.curInputIdx,
-        offset
+        offset,
+        self.output
       ))
 
       self.machine_stack[-1].previousAction = self.action
@@ -127,7 +131,8 @@ class abstract_machine:
           next_action,
           self.input,
           self.curInputIdx,
-          offset
+          offset,
+          self.output
         ))
 
         self.machine_stack[-1].previousAction = self.action
@@ -194,6 +199,9 @@ class abstract_machine:
           self.machine_stack[-1].memory.read(memoryName, tapeOffset)
           self.machine_stack[-1].memory.write(memoryName, symbolToReplace)
 
+          if(isInputTape):
+            self.machine_stack[-1].output = "".join(self.machine_stack[-1].memory.tapeDict[memoryName].tape[tempInputIdx+1:])
+
     if(len(self.machine_stack) > 0):
       self.get_next_machine()
     else:
@@ -213,6 +221,7 @@ class abstract_machine:
       self.previousAction = next_machine.previousAction
       self.offset = next_machine.offset
       self.valid_instructions = next_machine.valid_instructions
+      self.output = next_machine.output
   
   def start(self):
     offset = 0

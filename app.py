@@ -11,8 +11,9 @@ def get_machine_info(machine):
     tape1_contents = f"Tape 1d:\n{machine.memory.print_tape_contents()}"
     current_input_state = f"Input State: {get_current_input_state(machine.curInputIdx, machine.input)}"
     current_machine_state = f"Current State: {machine.curState}"
+    current_machine_output= f"Current Output: {machine.output}"
 
-    return stack_contents, queue_contents, tape1_contents, current_input_state, current_machine_state
+    return stack_contents, queue_contents, tape1_contents, current_input_state, current_machine_state, current_machine_output
 
 
 def main():
@@ -56,7 +57,7 @@ def main():
             if(input_type == "Single"):
                 cur_machine = machines[0]
                 cur_machine.start()
-                stack_contents, queue_contents, tape1_contents, current_input_state, current_machine_state = get_machine_info(cur_machine)
+                stack_contents, queue_contents, tape1_contents, current_input_state, current_machine_state, current_machine_output= get_machine_info(cur_machine)
             
                 # Shows state/content of each memory
                 st.text(stack_contents)
@@ -67,6 +68,8 @@ def main():
                 st.text(current_input_state)
                 # Shows current state of machine
                 st.text(current_machine_state)
+                # Shows current output of machine
+                st.text(current_machine_output)
             
                 # stores starting state of machine
                 st.session_state["machine"] = cur_machine
@@ -87,7 +90,7 @@ def main():
             print_machine(cur_machine)
             # print("\n")
         
-            stack_contents, queue_contents, tape1_contents, current_input_state, current_machine_state = get_machine_info(cur_machine)
+            stack_contents, queue_contents, tape1_contents, current_input_state, current_machine_state, current_machine_output = get_machine_info(cur_machine)
             
             # Shows state/content of each memory
             st.text(stack_contents)
@@ -98,6 +101,8 @@ def main():
             st.text(current_input_state)
             # Shows current state of machine
             st.text(current_machine_state)
+            # Shows current output of machine
+            st.text(current_machine_output)
 
 
             if(cur_machine.curState == "accept"):
@@ -120,7 +125,10 @@ def main():
                 cur_machine = machines[i]
                 cur_machine.run()
 
-                if(cur_machine.curState == "accept"):
+                if(cur_machine.machineType == "transducer"):
+                    st.text(f"Final output: {cur_machine.output}")
+
+                elif(cur_machine.curState == "accept"):
                     st.text(f"{cur_machine.input}: {ACCEPT_RESPONSE}")
 
                 elif((len(cur_machine.machine_stack) == 0 and len(cur_machine.valid_instructions) == 0) or cur_machine.curState == "reject"):

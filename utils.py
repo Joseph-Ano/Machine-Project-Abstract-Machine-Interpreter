@@ -128,6 +128,13 @@ def get_current_input_state(curIndex, user_input):
             result += user_input[i]
     return result
 
+def getMachineType(instructions):
+    for instruction in instructions:
+        if(instruction[4] == 'accept' or instruction[4] == 'reject'):
+            return "accepter"
+    
+    return "transducer"
+
 def print_machine(machine):
     # print(f"States: {machine.states}") 
     # print(f"Language: {machine.language}") 
