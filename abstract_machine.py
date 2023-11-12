@@ -22,6 +22,43 @@ class abstract_machine:
                                                      self.curInputIdx + self.offset)
     self.machine_stack = []
 
+  def print_action(self):
+    for valid_instruction in self.valid_instructions:
+      next_state = valid_instruction[4]
+      next_action = ""
+
+      # find the action of the next state
+      for instruction in self.instructions:
+        if next_state == instruction[0]:
+          next_action = instruction[1]
+          break
+
+      offset = 0
+      if(next_action == "SCAN RIGHT"):
+        offset+=1
+      elif(next_action == "SCAN LEFT"):
+        offset-=1
+
+      new_output = self.output + valid_instruction[3]
+
+      self.machine_stack.append(abstract_machine(
+        self.states,
+        self.language,
+        self.instructions,
+        self.memory,
+        next_state,
+        next_action,
+        self.input,
+        self.curInputIdx,
+        offset,
+        new_output
+      ))
+
+      self.machine_stack[-1].previousAction = self.action
+
+    if(len(self.machine_stack) > 0):
+      self.get_next_machine()
+
   def scan(self, direction=1):
     for valid_instruction in self.valid_instructions:
       next_state = valid_instruction[4]
@@ -241,7 +278,9 @@ class abstract_machine:
                                                       self.curInputIdx + offset)
 
   def step(self):
-    if(self.action =="SCAN"):
+    if(self.action =="PRINT"):
+      self.print_action()
+    elif(self.action =="SCAN"):
       self.scan()
     elif(self.action == "SCAN RIGHT"):
       self.scan_right()
@@ -259,7 +298,6 @@ class abstract_machine:
       self.get_next_machine()
 
   def run(self):
-    
     while True:
       self.step()
 

@@ -87,8 +87,8 @@ def main():
             cur_machine = st.session_state["machine"]
             cur_machine.step()
             st.session_state["machine"] = cur_machine
-            # print_machine(cur_machine)
-            # print("\n")
+            print_machine(cur_machine)
+            print("\n")
         
             stack_contents, queue_contents, tape1_contents, current_input_state, current_machine_state, current_machine_output = get_machine_info(cur_machine)
             
