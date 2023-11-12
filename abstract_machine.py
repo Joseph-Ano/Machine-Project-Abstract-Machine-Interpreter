@@ -174,33 +174,37 @@ class abstract_machine:
         elif(next_action == "SCAN LEFT"):
           offset-=1
 
-        if(tempMemory.tapeDict[memoryName].curPtr + tapeOffset <= len(tempMemory.tapeDict[memoryName].tape)-1 and 
-           tempMemory.tapeDict[memoryName].curPtr + tapeOffset >= 0):  
-          tempInput = self.input
-          tempInputIdx = self.curInputIdx
+        tempInput = self.input
+        tempInputIdx = self.curInputIdx
 
-          if(isInputTape):
-            tempInputIdx = tempInputIdx + tapeOffset
-            tempInput = self.input[:tempInputIdx] + symbolToReplace + self.input[tempInputIdx + 1:]
+        if(isInputTape):
+          tempInputIdx = tempInputIdx + tapeOffset
+          tempInput = self.input[:tempInputIdx] + symbolToReplace + self.input[tempInputIdx + 1:]
 
-          self.machine_stack.append(abstract_machine(
-            self.states,
-            self.language,
-            self.instructions,
-            tempMemory,
-            next_state,
-            next_action,
-            tempInput,
-            tempInputIdx,
-            offset
-          ))
+          if(tempInputIdx == len(self.input)-1 and tapeOffset == 1):
+            tempInput+="#"
+          elif(tempInputIdx == 0 and tapeOffset == -1):
+            tempInput = "#" +  tempInput
+            tempInputIdx+=1
 
-          self.machine_stack[-1].previousAction = self.action
-          self.machine_stack[-1].memory.read(memoryName, tapeOffset)
-          self.machine_stack[-1].memory.write(memoryName, symbolToReplace)
+        self.machine_stack.append(abstract_machine(
+          self.states,
+          self.language,
+          self.instructions,
+          tempMemory,
+          next_state,
+          next_action,
+          tempInput,
+          tempInputIdx,
+          offset
+        ))
 
-          if(isInputTape):
-            self.machine_stack[-1].output = "".join(self.machine_stack[-1].memory.tapeDict[memoryName].tape[tempInputIdx+1:])
+        self.machine_stack[-1].previousAction = self.action
+        self.machine_stack[-1].memory.read(memoryName, tapeOffset)
+        self.machine_stack[-1].memory.write(memoryName, symbolToReplace)
+
+        if(isInputTape):
+          self.machine_stack[-1].output = "".join(self.machine_stack[-1].memory.tapeDict[memoryName].tape[tempInputIdx+1:])
 
     if(len(self.machine_stack) > 0):
       self.get_next_machine()
@@ -255,19 +259,14 @@ class abstract_machine:
       self.get_next_machine()
 
   def run(self):
-    # print_machine(self)
-    # print("\n")
     
     while True:
       self.step()
-      # print_machine(self)
-      # print("\n")
 
       if(self.curState == "accept"):
-        # print("Input is accepted")
         break
 
-      elif((len(self.machine_stack) == 0 and len(self.valid_instructions) == 0) or self.curState =="reject"):
-        # print("Input is rejected")
+      # might need halt state
+      elif(len(self.machine_stack) == 0 and len(self.valid_instructions) == 0):
         break
 

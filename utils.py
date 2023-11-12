@@ -88,7 +88,10 @@ def parse_data_input(data, input):
     memory = Memory()
     memory.initialize(data)
     for key, _ in memory.tapeDict.items():
-        memory.tapeDict[key].tape = [char for char in input]
+        if(memory.tapeDict.keys().index(key) == 0):
+            memory.tapeDict[key].tape = [char for char in input]
+        else:
+            memory.tapeDict[key].tape = ['#', '#']
         break
 
     return memory

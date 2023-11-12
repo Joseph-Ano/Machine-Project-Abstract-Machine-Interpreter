@@ -87,7 +87,7 @@ def main():
             cur_machine = st.session_state["machine"]
             cur_machine.step()
             st.session_state["machine"] = cur_machine
-            print_machine(cur_machine)
+            # print_machine(cur_machine)
             # print("\n")
         
             stack_contents, queue_contents, tape1_contents, current_input_state, current_machine_state, current_machine_output = get_machine_info(cur_machine)
@@ -104,14 +104,19 @@ def main():
             # Shows current output of machine
             st.text(current_machine_output)
 
+            if(cur_machine.curState == "halt" and cur_machine.machineType == "transducer"):
+                st.text(f"Final output: {cur_machine.output}")
 
-            if(cur_machine.curState == "accept"):
+            elif(cur_machine.curState == "accept" and cur_machine.machineType == "accepter"):
                 st.session_state["machine"] = None
                 st.text(ACCEPT_RESPONSE)
 
-            elif((len(cur_machine.machine_stack) == 0 and len(cur_machine.valid_instructions) == 0) or cur_machine.curState == "reject"):
+            elif((len(cur_machine.machine_stack) == 0 and len(cur_machine.valid_instructions) == 0)):
                 st.session_state["machine"] = None
-                st.text(REJECT_RESPONSE)
+                if(cur_machine.machineType == "accepter"):
+                    st.text(REJECT_RESPONSE)
+                else:
+                    st.text(f"Final output: {cur_machine.output}")
     else:
         if(runBtn and "machine" not in st.session_state):
             st.text("Load a machine before pressing step")
@@ -125,22 +130,19 @@ def main():
                 cur_machine = machines[i]
                 cur_machine.run()
 
-                if(cur_machine.machineType == "transducer"):
+                if(cur_machine.curState == "halt" and cur_machine.machineType == "transducer"):
                     st.text(f"Final output: {cur_machine.output}")
 
-                elif(cur_machine.curState == "accept"):
+                elif(cur_machine.curState == "accept" and cur_machine.machineType == "accepter"):
                     st.text(f"{cur_machine.input}: {ACCEPT_RESPONSE}")
 
-                elif((len(cur_machine.machine_stack) == 0 and len(cur_machine.valid_instructions) == 0) or cur_machine.curState == "reject"):
-                    st.text(f"{cur_machine.input}: {REJECT_RESPONSE}")
+                elif(len(cur_machine.machine_stack) == 0 and len(cur_machine.valid_instructions) == 0):
+                    if(cur_machine.machineType == "accepter"):
+                        st.text(f"{cur_machine.input}: {REJECT_RESPONSE}")
+                    else:
+                        st.text(f"Final output: {cur_machine.output}")
 
             st.session_state["machine"] = None          
 
 if __name__ == "__main__":
     main()
-
-
-
-# show the state and values
-# in each memory object during each step of the input. Optionally, you can ask for multiple inputs and show the outputs for each
-# input without showing the machine state step-by-step
