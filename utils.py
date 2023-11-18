@@ -87,12 +87,15 @@ def parse_logic_input(logic):
 def parse_data_input(data, input):
     memory = Memory()
     memory.initialize(data)
+    i = 0
     for key, _ in memory.tapeDict.items():
-        if(memory.tapeDict.keys().index(key) == 0):
+        if(i == 0):
             memory.tapeDict[key].tape = [char for char in input]
+            memory.tapeDict[key].tape.append("#")
+            memory.tapeDict[key].tape.insert(0, "#")
         else:
             memory.tapeDict[key].tape = ['#', '#']
-        break
+        i+=1
 
     return memory
 

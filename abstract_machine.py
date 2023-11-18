@@ -264,18 +264,24 @@ class abstract_machine:
       self.valid_instructions = next_machine.valid_instructions
       self.output = next_machine.output
   
-  def start(self):
-    offset = 0
-    
-    if(self.action == "SCAN RIGHT"):
-      offset+=1
-    elif(self.action == "SCAN LEFT"):
-      offset-=1
+  # def start(self):
+  #   offset = 0
 
-    self.valid_instructions = get_valid_instructions(self.instructions, 
-                                                      self.curState, 
-                                                      self.input, 
-                                                      self.curInputIdx + offset)
+  #   for instruction in self.instructions:
+  #       if(instruction[1] != "WRITE" and instruction[1] != "READ" and instruction[1] != "PRINT"):
+  #           if(instruction[1] == "SCAN RIGHT" or instruction[1] == "RIGHT"):
+  #               offset = 1
+  #               break
+  #           elif(instruction[1] == "SCAN LEFT" or instruction[1] == "LEFT"):
+  #             offset = -1
+  #             break
+  #           else:
+  #             break
+
+  #   self.valid_instructions = get_valid_instructions(self.instructions, 
+  #                                                     self.curState, 
+  #                                                     self.input, 
+  #                                                     self.curInputIdx + offset)
 
   def step(self):
     if(self.action =="PRINT"):
@@ -298,6 +304,7 @@ class abstract_machine:
       self.get_next_machine()
 
   def run(self):
+    # self.start()
     while True:
       self.step()
 

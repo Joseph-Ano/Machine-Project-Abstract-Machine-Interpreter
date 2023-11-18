@@ -43,20 +43,29 @@ def main():
             machines = []
 
             for input in user_input:
+                temp = "#"+input+"#"
                 memory = parse_data_input(data, input)
+                startingIdx = 0
+                
+                for instruction in instructions:
+                    if(instruction[1] != "WRITE" and instruction[1] != "READ" and instruction[1] != "PRINT"):
+                        if(instruction[1] == "SCAN"):
+                            startingIdx = 1
+                            break
+                
                 machine = abstract_machine(states, 
                                language, 
                                instructions, 
                                memory, 
                                instructions[0][0], 
                                instructions[0][1], 
-                               input, 
-                               0)
+                               temp, 
+                               startingIdx)
                 machines.append(machine)
 
             if(input_type == "Single"):
                 cur_machine = machines[0]
-                cur_machine.start()
+                # cur_machine.start()
                 stack_contents, queue_contents, tape1_contents, current_input_state, current_machine_state, current_machine_output= get_machine_info(cur_machine)
             
                 # Shows state/content of each memory
@@ -104,10 +113,7 @@ def main():
             # Shows current output of machine
             st.text(current_machine_output)
 
-            if(cur_machine.curState == "halt" and cur_machine.machineType == "transducer"):
-                st.text(f"Final output: {cur_machine.output}")
-
-            elif(cur_machine.curState == "accept" and cur_machine.machineType == "accepter"):
+            if(cur_machine.curState == "accept"):
                 st.session_state["machine"] = None
                 st.text(ACCEPT_RESPONSE)
 
@@ -130,10 +136,7 @@ def main():
                 cur_machine = machines[i]
                 cur_machine.run()
 
-                if(cur_machine.curState == "halt" and cur_machine.machineType == "transducer"):
-                    st.text(f"Final output: {cur_machine.output}")
-
-                elif(cur_machine.curState == "accept" and cur_machine.machineType == "accepter"):
+                if(cur_machine.curState == "accept"):
                     st.text(f"{cur_machine.input}: {ACCEPT_RESPONSE}")
 
                 elif(len(cur_machine.machine_stack) == 0 and len(cur_machine.valid_instructions) == 0):
