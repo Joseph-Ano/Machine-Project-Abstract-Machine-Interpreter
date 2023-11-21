@@ -133,10 +133,15 @@ class abstract_machine:
       ))
 
       self.machine_stack[-1].previousAction = self.action
-      self.machine_stack[-1].memory.write(valid_instruction[2], valid_instruction[3])
+      temp = self.machine_stack[-1].memory.write(valid_instruction[2], valid_instruction[3])
+
+      if(temp == "FAILED"):
+         self.machine_stack.pop()
 
     if(len(self.machine_stack) > 0):
       self.get_next_machine()
+    else:
+      self.valid_instructions = []
 
   def read(self):
     for valid_instruction in self.valid_instructions:
@@ -220,9 +225,6 @@ class abstract_machine:
 
           if(tempInputIdx == len(self.input)-1 and tapeOffset == 1):
             tempInput+="#"
-          elif(tempInputIdx == 0 and tapeOffset == -1):
-            tempInput = "#" +  tempInput
-            tempInputIdx+=1
 
         self.machine_stack.append(abstract_machine(
           self.states,
@@ -238,10 +240,13 @@ class abstract_machine:
 
         self.machine_stack[-1].previousAction = self.action
         self.machine_stack[-1].memory.read(memoryName, tapeOffset)
-        self.machine_stack[-1].memory.write(memoryName, symbolToReplace)
+        temp = self.machine_stack[-1].memory.write(memoryName, symbolToReplace, True)
 
         if(isInputTape):
           self.machine_stack[-1].output = "".join(self.machine_stack[-1].memory.tapeDict[memoryName].tape[tempInputIdx+1:])
+
+        if(temp == "FAILED"):
+          self.machine_stack.pop()
 
     if(len(self.machine_stack) > 0):
       self.get_next_machine()

@@ -10,44 +10,47 @@ class Memory:
         self.tapeDict = OrderedDict()
         self.tape_2dDict = OrderedDict()
 
-    def write(self, name, input):
-        if(name in self.stackDict):
-            self.stackDict[name].write(input)
-
-        elif(name in self.queueDict):
-            self.queueDict[name].write(input)
-        
-        elif(name in self.tapeDict):
-            self.tapeDict[name].write(input)
-        
+    def write(self, name, input, isTape=False):
+        if(isTape):
+            if(name in self.tapeDict):
+                self.tapeDict[name].write(input)
+            else:
+                return "FAILED"
         else:
-            pass
+            if(name in self.stackDict):
+                self.stackDict[name].write(input)
+            elif(name in self.queueDict):
+                self.queueDict[name].write(input)
+            else:
+                return "FAILED"
+        return "PASSED"
 
     def read(self, name, offset=0):
-        if(name in self.stackDict):
-            return self.stackDict[name].read()
-
-        elif(name in self.queueDict):
-            return self.queueDict[name].read()
-        
-        elif(name in self.tapeDict):
-            return self.tapeDict[name].read(offset)
-        
+        if(offset == 0):
+            if(name in self.stackDict):
+                self.stackDict[name].read()
+            elif(name in self.queueDict):
+                self.queueDict[name].read()
+            
         else:
-            return "NA"
+            if(name in self.tapeDict):
+                self.tapeDict[name].read(offset)
+           
         
     def peek(self, name, offset=0):
-        if(name in self.stackDict):
-            return self.stackDict[name].peek()
-
-        elif(name in self.queueDict):
-            return self.queueDict[name].peek()
-        
-        elif(name in self.tapeDict):
-            return self.tapeDict[name].peek(offset)
-        
+        if(offset == 0):
+            if(name in self.stackDict):
+                return self.stackDict[name].peek()
+            elif(name in self.queueDict):
+                return self.queueDict[name].peek()
+            else:
+                return "FAILED"
+            
         else:
-            return "NA"
+            if(name in self.tapeDict):
+                return self.tapeDict[name].peek(offset)
+            else:
+                return "FAILED"
         
     def isEmpty(self, name):
         if(name in self.stackDict):

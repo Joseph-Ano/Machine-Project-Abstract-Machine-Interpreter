@@ -10,9 +10,6 @@ class Tape_One_D:
     def read(self, offset=0):
         if(self.curPtr+offset == len(self.tape)-1 and offset == 1):
             self.tape.append("#")
-        elif(self.curPtr+offset == 0 and offset == -1):
-            self.tape.insert(0, "#")
-            self.curPtr+=1
 
         result = self.tape[self.curPtr + offset]
         self.curPtr += offset
@@ -28,7 +25,7 @@ class Tape_One_D:
     def peek(self, offset=0):
         if(self.curPtr+offset == len(self.tape)-1 and offset == 1):
             return "#"
-        elif(self.curPtr+offset == 0 and offset == -1):
-            return "#"
+        elif(self.curPtr+offset < 0):
+            return "FAIL"
         else:
             return self.tape[self.curPtr + offset]
