@@ -11,8 +11,8 @@ class Tape_One_D:
         if(self.curPtr+offset == len(self.tape)-1 and offset == 1):
             self.tape.append("#")
 
-        result = self.tape[self.curPtr + offset]
         self.curPtr += offset
+        result = self.tape[self.curPtr]
 
         return result
     
@@ -23,9 +23,7 @@ class Tape_One_D:
             return False
     
     def peek(self, offset=0):
-        if(self.curPtr+offset == len(self.tape)-1 and offset == 1):
-            return "#"
-        elif(self.curPtr+offset < 0):
+        if(self.curPtr+offset < 0):
             return "FAIL"
         else:
             return self.tape[self.curPtr + offset]

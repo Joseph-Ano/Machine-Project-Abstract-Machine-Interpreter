@@ -133,9 +133,9 @@ class abstract_machine:
       ))
 
       self.machine_stack[-1].previousAction = self.action
-      temp = self.machine_stack[-1].memory.write(valid_instruction[2], valid_instruction[3])
+      writeResult = self.machine_stack[-1].memory.write(valid_instruction[2], valid_instruction[3])
 
-      if(temp == "FAILED"):
+      if(writeResult == "FAILED"):
          self.machine_stack.pop()
 
     if(len(self.machine_stack) > 0):
@@ -185,8 +185,8 @@ class abstract_machine:
     else:
       self.valid_instructions = []
 
-  def right(self, tapeOffset=1):
-    isInputTape = False
+  def right(self, colOffset=1, rowOffset=0):
+    inputTape = ""
 
     for valid_instruction in self.valid_instructions:
       tempMemory = copy.deepcopy(self.memory)
@@ -196,11 +196,17 @@ class abstract_machine:
 
       for key, _ in tempMemory.tapeDict.items():
         if memoryName == key:
-          isInputTape = True
-          tempMemory.tapeDict[key].curPtr = self.curInputIdx
+          inputTape = key
         break
 
-      if(not tempMemory.isEmpty(memoryName) and symbolToBeRead == tempMemory.peek(memoryName, tapeOffset)):
+      for key, _ in tempMemory.tape_2dDict.items():
+        if memoryName == key:
+          inputTape = key
+        break
+
+      print(symbolToBeRead)
+      print(tempMemory.peek(memoryName, colOffset, rowOffset))
+      if(symbolToBeRead == tempMemory.peek(memoryName, colOffset, rowOffset)):
         next_state = valid_instruction[4]
         next_action = ""
 
@@ -216,16 +222,6 @@ class abstract_machine:
         elif(next_action == "SCAN LEFT"):
           offset-=1
 
-        tempInput = self.input
-        tempInputIdx = self.curInputIdx
-
-        if(isInputTape):
-          tempInputIdx = tempInputIdx + tapeOffset
-          tempInput = self.input[:tempInputIdx] + symbolToReplace + self.input[tempInputIdx + 1:]
-
-          if(tempInputIdx == len(self.input)-1 and tapeOffset == 1):
-            tempInput+="#"
-
         self.machine_stack.append(abstract_machine(
           self.states,
           self.language,
@@ -233,19 +229,25 @@ class abstract_machine:
           tempMemory,
           next_state,
           next_action,
-          tempInput,
-          tempInputIdx,
+          self.input,
+          self.curInputIdx,
           offset
         ))
 
         self.machine_stack[-1].previousAction = self.action
-        self.machine_stack[-1].memory.read(memoryName, tapeOffset)
-        temp = self.machine_stack[-1].memory.write(memoryName, symbolToReplace, True)
+        self.machine_stack[-1].memory.read(memoryName, colOffset, rowOffset)
+        writeResult = self.machine_stack[-1].memory.write(memoryName, symbolToReplace)
 
-        if(isInputTape):
-          self.machine_stack[-1].output = "".join(self.machine_stack[-1].memory.tapeDict[memoryName].tape[tempInputIdx+1:])
+        if(inputTape != ""):
+          if(inputTape in self.machine_stack[-1].memory.tapeDict):
+            tapeHead = self.machine_stack[-1].memory.tapeDict[memoryName].curPtr
+            self.machine_stack[-1].output = "".join(self.machine_stack[-1].memory.tapeDict[memoryName].tape[tapeHead+1:])
+          else:
+            tapeHeadRow = self.machine_stack[-1].memory.tape_2dDict[memoryName].rowPtr
+            tapeHeadCol = self.machine_stack[-1].memory.tape_2dDict[memoryName].colPtr
+            self.machine_stack[-1].output = "".join(self.machine_stack[-1].memory.tape_2dDict[memoryName].tape[tapeHeadRow][tapeHeadCol+1:])
 
-        if(temp == "FAILED"):
+        if(writeResult == "FAILED"):
           self.machine_stack.pop()
 
     if(len(self.machine_stack) > 0):
@@ -255,6 +257,12 @@ class abstract_machine:
 
   def left(self):
     self.right(-1)
+
+  def up(self):
+    self.right(0, -1)
+
+  def down(self):
+    self.right(0, 1)
 
   def get_next_machine(self):
       next_machine = self.machine_stack.pop()
@@ -305,6 +313,10 @@ class abstract_machine:
       self.right()
     elif(self.action == "LEFT"):
       self.left()
+    elif(self.action == "UP"):
+      self.up()
+    elif(self.action == "DOWN"):
+      self.down()
     else:
       self.get_next_machine()
 

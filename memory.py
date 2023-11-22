@@ -1,6 +1,7 @@
 from memory_structs.stack import* 
 from memory_structs.customqueue import* 
 from memory_structs.tape_oned import* 
+from memory_structs.tape_twod import* 
 from collections import OrderedDict
 
 class Memory:
@@ -10,35 +11,39 @@ class Memory:
         self.tapeDict = OrderedDict()
         self.tape_2dDict = OrderedDict()
 
-    def write(self, name, input, isTape=False):
-        if(isTape):
-            if(name in self.tapeDict):
-                self.tapeDict[name].write(input)
-            else:
-                return "FAILED"
+    def write(self, name, input):
+        if(name in self.stackDict):
+            self.stackDict[name].write(input)
+        elif(name in self.queueDict):
+            self.queueDict[name].write(input)
+        elif(name in self.tapeDict):
+            self.tapeDict[name].write(input)
+        elif(name in self.tape_2dDict):
+            self.tape_2dDict[name].write(input)
         else:
-            if(name in self.stackDict):
-                self.stackDict[name].write(input)
-            elif(name in self.queueDict):
-                self.queueDict[name].write(input)
-            else:
-                return "FAILED"
+            return "FAILED"
+        
         return "PASSED"
 
-    def read(self, name, offset=0):
-        if(offset == 0):
+    def read(self, name, colOffset=0, rowOffset=0):
+        if(colOffset == 0 and rowOffset == 0):
             if(name in self.stackDict):
                 self.stackDict[name].read()
             elif(name in self.queueDict):
                 self.queueDict[name].read()
             
-        else:
+        elif(colOffset != 0 and rowOffset == 0):
             if(name in self.tapeDict):
-                self.tapeDict[name].read(offset)
-           
+                self.tapeDict[name].read(colOffset)
+            elif(name in self.tape_2dDict):
+                self.tape_2dDict[name].read(colOffset)
+
+        else:
+            if(name in self.tape_2dDict):
+                self.tape_2dDict[name].read(colOffset, rowOffset)
         
-    def peek(self, name, offset=0):
-        if(offset == 0):
+    def peek(self, name, colOffset=0, rowOffset=0):
+        if(colOffset == 0 and rowOffset == 0):
             if(name in self.stackDict):
                 return self.stackDict[name].peek()
             elif(name in self.queueDict):
@@ -46,22 +51,25 @@ class Memory:
             else:
                 return "FAILED"
             
-        else:
+        elif(colOffset != 0 and rowOffset == 0):
             if(name in self.tapeDict):
-                return self.tapeDict[name].peek(offset)
+                return self.tapeDict[name].peek(colOffset)
+            elif(name in self.tape_2dDict):
+                return self.tape_2dDict[name].peek(colOffset)
+            else:
+                return "FAILED"
+            
+        else:
+            if(name in self.tape_2dDict):
+                return self.tape_2dDict[name].peek(colOffset, rowOffset)
             else:
                 return "FAILED"
         
     def isEmpty(self, name):
         if(name in self.stackDict):
             return self.stackDict[name].isEmpty()
-
         elif(name in self.queueDict):
             return self.queueDict[name].isEmpty()
-        
-        elif(name in self.tapeDict):
-            return self.tapeDict[name].isEmpty()
-        
         else:
             return True
         
@@ -77,6 +85,8 @@ class Memory:
                 self.queueDict.setdefault(name, CustomQueue(name))
             elif(type == "TAPE"):
                 self.tapeDict.setdefault(name, Tape_One_D(name))
+            elif(type == "2D_TAPE"):
+                self.tape_2dDict.setdefault(name, Tape_Two_D(name))
 
     def print_contents(self):
         for stack in self.stackDict.values():
@@ -105,7 +115,7 @@ class Memory:
     def print_tape_contents(self):
         result = ""
         for tape in self.tapeDict.values():
-            result += "[ "
+            result += f"{tape.name}: [ "
             for i in range(len(tape.tape)):
                 if(i == tape.curPtr):
                     result += ">"
@@ -114,7 +124,20 @@ class Memory:
 
         return result
 
-        # print(self.stackDict.values())
+    def print_tape_2d_contents(self):
+        result = ""
+        for tape in self.tape_2dDict.values():
+            result += f"{tape.name}:\n [ "
+            for i in range(len(tape.tape)):
+                for j in range(len(tape.tape[0])):
+                    if(i == tape.rowPtr and j == tape.colPtr):
+                        result += ">"
+                    result += f"{tape.tape[i][j]} "
+                if(i < len(tape.tape) - 1):
+                    result += "\n"
+            result += "]\n"
+
+        return result
        
         
 

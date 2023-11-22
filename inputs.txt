@@ -103,7 +103,7 @@ q2] RIGHT(T1) (1/1,q2), (#/1,q3)
 q3] RIGHT(T1) (#/1,q4)
 q4] RIGHT(T1) (#/1,q5)
 q5] LEFT(T1) (1/1,q5), (#/#,q6)
-q6] LEFT(T1) (1/1,q6), (X/X,q0)
+q6] LEFT(T1) (1/1,q6), (X/X,q0), (#/#, halt)
 1
 11
 111
@@ -125,9 +125,9 @@ q8] RIGHT(T1) (0/0,q8), (1/1,q8), (#/0,q9)
 q9] RIGHT(T1) (#/0,q10)
 q10] LEFT(T1) (0/0,q10), (1/1,q10), (#/#,q11)
 q11] LEFT(T1) (0/0,q11), (x/x,q11), (y/y,q12)
-q12] RIGHT(T1) (0/y,q7), (x/x,q13)
-q13] RIGHT(T1) (x/x,q13)
-q14] RIGHT(T1) (x/x,q14)
+q12] RIGHT(T1) (0/y,q7), (x/x,q13), (#/#,halt)
+q13] RIGHT(T1) (x/x,q13), (#/#,halt)
+q14] RIGHT(T1) (x/x,q14), (#/#,halt)
 
 00111
 11
@@ -170,17 +170,17 @@ aabc
 .DATA
 TAPE T1
 .LOGIC
-q0] RIGHT(T1) (a/x,q1), (b/b,halt), (y/y,q3), (#/#,accept)
-q1] RIGHT(T1) (a/a,q1), (y/y,q1), (b/y,q2)
+q0] RIGHT(T1) (a/x,q1), (b/b,halt), (y/y,q3), (#/#,accept), (c/c,halt)
+q1] RIGHT(T1) (a/a,q1), (y/y,q1), (b/y,q2), (c/c,halt), (#/#,halt)
 q2] LEFT(T1) (a/a,q2), (y/y,q2), (x/x,q0)
-q3] RIGHT(T1) (y/y,q3), (b/y,q4), (a/a,halt), (z/z,q6)
-q4] RIGHT(T1) (b/b,q4), (z/z,q4), (c/z,q5)
+q3] RIGHT(T1) (y/y,q3), (b/y,q4), (a/a,halt), (z/z,q6), (c/c,halt), (#/#,halt)
+q4] RIGHT(T1) (b/b,q4), (z/z,q4), (c/z,q5), (a/a,halt), (#/#,halt)
 q5] LEFT(T1) (b/b,q5), (z/z,q5), (y/y,q3)
-q6] RIGHT(T1) (z/z,q6), (#/#,q7)
+q6] RIGHT(T1) (z/z,q6), (#/#,q7), (c/c,halt), (a/a,halt), (b/b,halt)
 q7] LEFT(T1) (z/c,q8), (y/y,q10)
-q8] LEFT(T1) (a/a,q8), (y/y,q8), (z/z,q8), (x/a,q9)
-q9] RIGHT(T1) (a/a,q9), (y/y,q9), (z/z,q9), (c/c,q7),
-q10] LEFT(T1) (y/y,q10), (a/a,q10), (#/#,accept)
+q8] LEFT(T1) (a/a,q8), (y/y,q8), (z/z,q8), (x/a,q9), (#/#,halt)
+q9] RIGHT(T1) (a/a,q9), (y/y,q9), (z/z,q9), (c/c,q7)
+q10] LEFT(T1) (y/y,q10), (a/a,q10), (#/#,accept), (x/x,halt)
 
 abbc
 
@@ -191,9 +191,15 @@ abcc
 aabc
 ==============================================
 
+.DATA
+2D_TAPE T1
+.LOGIC
+q0] DOWN(T1) (#/#,q1)
+q1] UP(T1) (#/#,q2)
+q2] RIGHT (0/0,halt)
 
-
-
+00111
+==============================================
 
 
 

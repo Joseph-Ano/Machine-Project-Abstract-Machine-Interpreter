@@ -94,7 +94,16 @@ def parse_data_input(data, input):
             memory.tapeDict[key].tape.append("#")
             memory.tapeDict[key].tape.insert(0, "#")
         else:
-            memory.tapeDict[key].tape = ['#', '#']
+            memory.tapeDict[key].tape = ['#', '#', '#']
+
+    for key, _ in memory.tape_2dDict.items():
+        if(i == 0):
+            temp = '#' + input + '#'
+            memory.tape_2dDict[key].tape.append([char for char in temp])
+            memory.tape_2dDict[key].tape.append(['#' for char in temp])
+        else:
+            memory.tape_2dDict[key].tape = [['#', '#', '#'], ['#', '#', '#']]
+
         i+=1
 
     return memory
@@ -102,13 +111,14 @@ def parse_data_input(data, input):
 def get_valid_instructions(instructions, curState, input, curInputIdx):
     valid_instructions = []
     action = ""
+    actionSubgroup = {"WRITE", "READ", "RIGHT", "LEFT", "UP", "DOWN"}
 
     for instruction in instructions:
         if curState == instruction[0]:
             action = instruction[1]
             break
 
-    if(action == "WRITE" or action == "READ" or action == "RIGHT" or action == "LEFT" or action == "PRINT"):
+    if(action in actionSubgroup):
          for instruction in instructions:
             if curState == instruction[0]:
                 valid_instructions.append(instruction)
