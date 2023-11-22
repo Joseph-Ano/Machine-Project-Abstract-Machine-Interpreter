@@ -22,12 +22,6 @@ class Tape_Two_D:
 
         return result
     
-    def isEmpty(self):
-        if(len(self.tape) == 0):
-            return True
-        else:
-            return False
-    
     def peek(self, colOffset=0, rowOffset=0):
         if(self.colPtr+colOffset < 0):
             return "FAIL"

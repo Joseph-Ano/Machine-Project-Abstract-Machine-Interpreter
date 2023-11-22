@@ -88,16 +88,6 @@ class Memory:
             elif(type == "2D_TAPE"):
                 self.tape_2dDict.setdefault(name, Tape_Two_D(name))
 
-    def print_contents(self):
-        for stack in self.stackDict.values():
-            print(f"{stack.name}: {stack.stack}")
-
-        for queue in self.queueDict.values():
-            print(f"{queue.name}: {queue.queue}")
-
-        for tape in self.tapeDict.values():
-            print(f"{tape.name}: {tape.tape} - Current index: {tape.curPtr}")
-
     def print_stack_contents(self):
         result = ""
         for stack in self.stackDict.values():

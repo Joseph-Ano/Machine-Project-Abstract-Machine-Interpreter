@@ -16,12 +16,6 @@ class Tape_One_D:
 
         return result
     
-    def isEmpty(self):
-        if(len(self.tape) == 0):
-            return True
-        else:
-            return False
-    
     def peek(self, offset=0):
         if(self.curPtr+offset < 0):
             return "FAIL"
