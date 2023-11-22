@@ -18,6 +18,13 @@ def get_machine_info(machine):
 
 
 def main():
+    st.header('Joseph Ano: Machine Project: Abstract Machine Interpreter', divider='rainbow')
+    st.subheader('How to run:')
+    st.markdown("1. Enter machine description and input.")
+    st.markdown("2. Select type of input.")
+    st.markdown("3. Click load.")
+    st.markdown("4. Click run/step.")
+
     form = st.form(key='main_form')
     user_input = form.text_area('Enter Input', height=100, key="user_input")
     input_type = form.radio("Type of input", options=["Single", "Multiple"])

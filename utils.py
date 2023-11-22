@@ -111,7 +111,7 @@ def parse_data_input(data, input):
 def get_valid_instructions(instructions, curState, input, curInputIdx):
     valid_instructions = []
     action = ""
-    actionSubgroup = {"WRITE", "READ", "RIGHT", "LEFT", "UP", "DOWN"}
+    actionSubgroup = {"PRINT", "WRITE", "READ", "RIGHT", "LEFT", "UP", "DOWN"}
 
     for instruction in instructions:
         if curState == instruction[0]:
@@ -156,9 +156,9 @@ def print_machine(machine):
     # print(f"Language: {machine.language}") 
     # print(f"Instructions: {machine.instructions}")
     print(f"CurState: {machine.curState}")
-    print(f"Memory:")
-    machine.memory.print_contents()
-    print("=============================")
+    # print(f"Memory:")
+    # machine.memory.print_contents()
+    # print("=============================")
     print(f"Action: {machine.action}")
     print(f"Input: {machine.input}")
     print(f"CurInputIdx: {machine.curInputIdx}")

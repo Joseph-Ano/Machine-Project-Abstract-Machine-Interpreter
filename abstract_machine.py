@@ -58,6 +58,8 @@ class abstract_machine:
 
     if(len(self.machine_stack) > 0):
       self.get_next_machine()
+    else:
+      self.valid_instructions = []
 
   def scan(self, direction=1):
     for valid_instruction in self.valid_instructions:
@@ -204,8 +206,6 @@ class abstract_machine:
           inputTape = key
         break
 
-      print(symbolToBeRead)
-      print(tempMemory.peek(memoryName, colOffset, rowOffset))
       if(symbolToBeRead == tempMemory.peek(memoryName, colOffset, rowOffset)):
         next_state = valid_instruction[4]
         next_action = ""
